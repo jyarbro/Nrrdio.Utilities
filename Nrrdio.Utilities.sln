@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nrrdio.Utilities", "Nrrdio.Utilities\Nrrdio.Utilities.csproj", "{9540FDE5-602D-4B82-AE0B-69DA33B56C67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nrrdio.Utilities.Web", "Nrrdio.Utilities.Web\Nrrdio.Utilities.Web.csproj", "{17931E6A-1A82-40B7-A125-1EDAAAD3CA30}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9540FDE5-602D-4B82-AE0B-69DA33B56C67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9540FDE5-602D-4B82-AE0B-69DA33B56C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9540FDE5-602D-4B82-AE0B-69DA33B56C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9540FDE5-602D-4B82-AE0B-69DA33B56C67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17931E6A-1A82-40B7-A125-1EDAAAD3CA30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17931E6A-1A82-40B7-A125-1EDAAAD3CA30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17931E6A-1A82-40B7-A125-1EDAAAD3CA30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17931E6A-1A82-40B7-A125-1EDAAAD3CA30}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3D851F46-F1B2-4CAB-AADC-9F5F0EE1FAF2}
+	EndGlobalSection
+EndGlobal
