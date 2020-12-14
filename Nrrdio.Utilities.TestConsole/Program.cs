@@ -1,10 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Nrrdio.Utilities;
+﻿using Microsoft.Extensions.Hosting;
+using Nrrdio.Utilities.TestConsole;
 
-var services = new ServiceCollection();
-services.AddScoped<JsonFileLogger>();
-
-var logger = services
-    .BuildServiceProvider()
-    .GetService<JsonFileLogger>();
-
+await JsonFileLoggerTestHost.CreateHostBuilder(args).Build().RunAsync();
