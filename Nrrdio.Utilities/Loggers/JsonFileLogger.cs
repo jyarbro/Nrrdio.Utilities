@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Nrrdio.Utilities.Loggers.Contracts;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -8,9 +9,18 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nrrdio.Utilities.Loggers {
-    public class JsonFileLogger : ILogger, IDisposable {
-        Configuration Config { get; }
-        ConcurrentQueue<LogEntry> WriteableQueue { get; }
+    public class JsonFileLogger : INrrdioLogger, IDisposable {
+        public string Name { private get; init; }
+
+        public INrrdioLoggerConfig GenericConfig {
+            get => Config;
+            init => Config = value as Configuration;
+        }
+        Configuration Config { get; init; }
+
+        public CancellationToken CancellationToken { private get; init; }
+
+        ConcurrentQueue<LogEntry> WriteableQueue { get; } = new ConcurrentQueue<LogEntry>();
 
         string FilePath {
             get {
@@ -26,12 +36,7 @@ namespace Nrrdio.Utilities.Loggers {
         bool disposed;
         int counter;
 
-        public JsonFileLogger(
-            Configuration config
-        ) {
-            Config = config;
-            WriteableQueue = new ConcurrentQueue<LogEntry>();
-            
+        public JsonFileLogger() {
             MonitorQueue();
         }
 
@@ -94,7 +99,7 @@ namespace Nrrdio.Utilities.Loggers {
             Task.Run(() => {
                 PreparePath();
                 
-                while (!Config.CancellationToken.IsCancellationRequested && !disposed) {
+                while (!CancellationToken.IsCancellationRequested && !disposed) {
                     while (WriteableQueue.TryDequeue(out var logEntry)) {
                         // Check file size every 100 entries.
                         if (counter++ % 100 == 0) {
@@ -123,7 +128,7 @@ namespace Nrrdio.Utilities.Loggers {
                 var disposedTime = DateTime.Now;
 
                 // Block thread until queue is empty or until time has passed.
-                while (WriteableQueue.Count > 0 && DateTime.Now < disposedTime.AddMilliseconds(500)) {
+                while (!WriteableQueue.IsEmpty && DateTime.Now < disposedTime.AddMilliseconds(500)) {
                     Thread.Sleep(50);
                 }
 
@@ -131,13 +136,12 @@ namespace Nrrdio.Utilities.Loggers {
             }
         }
 
-        public record Configuration {
+        public record Configuration : INrrdioLoggerConfig {
             public string Name { get; init; }
             public LogLevel LogLevel { get; init; } = LogLevel.Information;
             public string FolderPath { get; init; }
             public int RetainFileCount { get; init; } = 5;
             public int MaxFileSize { get; init; } = 100;
-            public CancellationToken CancellationToken { get; set; }
         }
 
         public class LogEntry {
@@ -147,28 +151,5 @@ namespace Nrrdio.Utilities.Loggers {
             public string Message { get; set; }
             public Exception Exception { get; set; }
         }
-
-        public sealed class Provider : ILoggerProvider {
-            public Configuration Config { private get; init; }
-
-            ConcurrentDictionary<string, JsonFileLogger> Instances => new ConcurrentDictionary<string, JsonFileLogger>();
-            CancellationTokenSource CancellationTokenSource => new CancellationTokenSource();
-
-            public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new JsonFileLogger(Config with { Name = name, CancellationToken = CancellationTokenSource.Token }));
-            public void Dispose() {
-                CancellationTokenSource.Cancel();
-
-                foreach (var instance in Instances) {
-                    instance.Value.Dispose();
-                }
-
-                Instances.Clear();
-            }
-        }
-    }
-
-    public static class JsonFileLoggerExtensions {
-        public static ILoggingBuilder AddJsonFileLogger(this ILoggingBuilder builder, JsonFileLogger.Configuration config) =>
-            builder.AddProvider(new JsonFileLogger.Provider { Config = config });
     }
 }

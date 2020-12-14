@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Nrrdio.Utilities.Loggers;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,7 +55,7 @@ namespace Nrrdio.Utilities.TestConsole {
                     builder.ClearProviders()
                         // Test using AddProvider
                         .AddProvider(
-                            new JsonFileLogger.Provider {
+                            new LoggerProvider<JsonFileLogger, JsonFileLogger.Configuration> {
                                 Config = new JsonFileLogger.Configuration {
                                     LogLevel = LogLevel.Error,
                                     FolderPath = "First",
