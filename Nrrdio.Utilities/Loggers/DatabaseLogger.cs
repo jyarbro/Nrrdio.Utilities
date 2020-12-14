@@ -1,13 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Nrrdio.Utilities.Loggers.Contracts;
 using System;
-using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Nrrdio.Utilities.Loggers {
-    public class DatabaseLogger : ILogger {
+    public class DatabaseLogger : INrrdioLogger {
+        public string Name { private get; init; }
+
+        public INrrdioLoggerConfig GenericConfig {
+            get => Config;
+            init => Config = value as Configuration;
+        }
         Configuration Config { get; init; }
-        DbContext DbContext { get; init; }
+
+        public CancellationToken CancellationToken { private get; init; }
 
         public IDisposable BeginScope<TState>(TState state) => default;
 
@@ -23,7 +31,7 @@ namespace Nrrdio.Utilities.Loggers {
             if (logLevel >= Config.LogLevel) {
                 var message = $"{Config.Name} - {formatter(state, exception)}";
 
-                DbContext.Add(new LogEntry {
+                Config.Db.Add(new LogEntry {
                     EventId = eventId.Id,
                     LogLevel = logLevel,
                     Message = message,
@@ -31,15 +39,18 @@ namespace Nrrdio.Utilities.Loggers {
                     Exception = exception
                 });
 
-                DbContext.SaveChanges();
+                Config.Db.SaveChanges();
 
                 Debug.WriteLine(message);
             }
         }
 
-        public record Configuration {
+        public void Dispose() { }
+
+        public record Configuration : INrrdioLoggerConfig {
             public string Name { get; init; }
             public LogLevel LogLevel { get; init; } = LogLevel.Information;
+            public DbContext Db { get; init; }
         }
 
         public class LogEntry {
@@ -49,21 +60,9 @@ namespace Nrrdio.Utilities.Loggers {
             public string Message { get; set; }
             public Exception Exception { get; set; }
         }
-
-        public sealed class Provider : ILoggerProvider {
-            public Configuration Config { private get; init; }
-
-            ConcurrentDictionary<string, DatabaseLogger> Instances => new ConcurrentDictionary<string, DatabaseLogger>();
-
-            public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new DatabaseLogger { Config = Config with { Name = name } });
-            public void Dispose() {
-                Instances.Clear();
-            }
-        }
     }
 
-    public static class DatabaseLoggerExtensions {
-        public static ILoggingBuilder AddDatabaseLogger(this ILoggingBuilder builder, DatabaseLogger.Configuration config) =>
-            builder.AddProvider(new DatabaseLogger.Provider { Config = config });
-    }
+
+
+
 }
