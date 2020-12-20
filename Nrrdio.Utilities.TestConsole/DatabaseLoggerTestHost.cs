@@ -2,18 +2,24 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Nrrdio.Utilities.Loggers;
+using Nrrdio.Utilities.Loggers.Contracts;
+using Nrrdio.Utilities.TestConsole.Models;
+using Nrrdio.Utilities.TestConsole.Utilities;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nrrdio.Utilities.TestConsole {
     class DatabaseLoggerTestHost : IHostedService {
-        public ILogger<DatabaseLoggerTestHost> Logger { private get; init; }
+        ILogger<DatabaseLoggerTestHost> Logger { get; init; }
+        DatabaseErrorOnlyTests ErrorOnlyTests { get; init; }
 
         public DatabaseLoggerTestHost(
             ILogger<DatabaseLoggerTestHost> logger,
-            IHostApplicationLifetime appLifetime
+            IHostApplicationLifetime appLifetime,
+            DatabaseErrorOnlyTests errorOnlyTests
         ) {
             Logger = logger;
+            ErrorOnlyTests = errorOnlyTests;
 
             appLifetime.ApplicationStarted.Register(OnStarted);
             appLifetime.ApplicationStopping.Register(OnStopping);
@@ -23,9 +29,9 @@ namespace Nrrdio.Utilities.TestConsole {
         public Task StartAsync(CancellationToken cancellationToken) {
             Logger.LogInformation($"{nameof(StartAsync)} has been called.");
 
+            Logger.Log(LogLevel.Debug, "Debug");
             Logger.Log(LogLevel.Information, "Information");
             Logger.Log(LogLevel.Warning, "Warning");
-            Logger.Log(LogLevel.Debug, "Debug");
             Logger.Log(LogLevel.Error, "Error");
 
             return Task.CompletedTask;
@@ -38,6 +44,8 @@ namespace Nrrdio.Utilities.TestConsole {
 
         void OnStarted() {
             Logger.LogInformation($"{nameof(OnStarted)} has been called.");
+
+            ErrorOnlyTests.RunTest();
         }
 
         void OnStopping() {
@@ -51,22 +59,13 @@ namespace Nrrdio.Utilities.TestConsole {
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host
                 .CreateDefaultBuilder(args)
-                .ConfigureLogging(builder =>
-                    builder.ClearProviders()
-                        // Test using AddProvider
-                        .AddProvider(
-                            new LoggerProvider<DatabaseLogger, DatabaseLogger.Configuration> {
-                                Config = new DatabaseLogger.Configuration {
-                                    LogLevel = LogLevel.Error
-                                }
-                            })
-                        // Test using extension method
-                        .AddDatabaseLogger(new DatabaseLogger.Configuration {
-                            LogLevel = LogLevel.Warning
-                        })
-                )
                 .ConfigureServices((hostContext, services) => {
-                    services.AddHostedService<JsonFileLoggerTestHost>();
+                    services.AddHostedService<DatabaseLoggerTestHost>();
+                    services.AddSingleton<DataContext>();
+                    services.AddSingleton<ILogEntryRepository, LogEntryTestRepository>();
+                    services.AddSingleton<ILoggerProvider, DatabaseLoggerProvider>();
+                    services.AddScoped<DatabaseErrorOnlyTests>();
+                    services.AddLogging();
                 });
     }
 }

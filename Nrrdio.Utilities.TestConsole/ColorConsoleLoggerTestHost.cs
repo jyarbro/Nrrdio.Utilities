@@ -2,13 +2,12 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Nrrdio.Utilities.Loggers;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nrrdio.Utilities.TestConsole {
     class ColorConsoleLoggerTestHost : IHostedService {
-        public ILogger<ColorConsoleLoggerTestHost> Logger { private get; init; }
+        ILogger<ColorConsoleLoggerTestHost> Logger { get; init; }
 
         public ColorConsoleLoggerTestHost(
             ILogger<ColorConsoleLoggerTestHost> logger,

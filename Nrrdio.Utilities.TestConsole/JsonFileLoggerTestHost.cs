@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Nrrdio.Utilities.TestConsole {
     class JsonFileLoggerTestHost : IHostedService {
-        public ILogger<JsonFileLoggerTestHost> Logger { private get; init; }
+        ILogger<JsonFileLoggerTestHost> Logger { get; init; }
 
         public JsonFileLoggerTestHost(
             ILogger<JsonFileLoggerTestHost> logger,
@@ -55,7 +55,7 @@ namespace Nrrdio.Utilities.TestConsole {
                     builder.ClearProviders()
                         // Test using AddProvider
                         .AddProvider(
-                            new LoggerProvider<JsonFileLogger, JsonFileLogger.Configuration> {
+                            new JsonFileLoggerProvider {
                                 Config = new JsonFileLogger.Configuration {
                                     LogLevel = LogLevel.Error,
                                     FolderPath = "First",

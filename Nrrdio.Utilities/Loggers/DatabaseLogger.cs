@@ -2,24 +2,27 @@
 using Microsoft.Extensions.Logging;
 using Nrrdio.Utilities.Loggers.Contracts;
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Threading;
+using System.Text.Json;
 
 namespace Nrrdio.Utilities.Loggers {
-    public class DatabaseLogger : INrrdioLogger {
+    public class DatabaseLogger : ILogger {
         public string Name { private get; init; }
 
-        public INrrdioLoggerConfig GenericConfig {
-            get => Config;
-            init => Config = value as Configuration;
-        }
-        Configuration Config { get; init; }
+        public LogLevel LogLevel { get; init; } = LogLevel.Information;
 
-        public CancellationToken CancellationToken { private get; init; }
+        ILogEntryRepository Repository { get; init; }
+
+        public DatabaseLogger(
+            ILogEntryRepository repository
+        ) {
+            Repository = repository;
+        }
 
         public IDisposable BeginScope<TState>(TState state) => default;
 
-        public bool IsEnabled(LogLevel logLevel) => logLevel == Config.LogLevel;
+        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel;
 
         public void Log<TState>(
             LogLevel logLevel,
@@ -28,41 +31,44 @@ namespace Nrrdio.Utilities.Loggers {
             Exception exception,
             Func<TState, Exception, string> formatter) {
 
-            if (logLevel >= Config.LogLevel) {
-                var message = $"{Config.Name} - {formatter(state, exception)}";
+            if (logLevel >= LogLevel) {
+                var message = $"{Name} - {formatter(state, exception)}";
 
-                Config.Db.Add(new LogEntry {
+                Repository.Add(new LogEntry {
                     EventId = eventId.Id,
                     LogLevel = logLevel,
                     Message = message,
                     Time = DateTime.Now,
-                    Exception = exception
+                    SerializedException = exception is not null ? JsonSerializer.Serialize(exception) : string.Empty
                 });
-
-                Config.Db.SaveChanges();
 
                 Debug.WriteLine(message);
             }
         }
 
         public void Dispose() { }
-
-        public record Configuration : INrrdioLoggerConfig {
-            public string Name { get; init; }
-            public LogLevel LogLevel { get; init; } = LogLevel.Information;
-            public DbContext Db { get; init; }
-        }
-
-        public class LogEntry {
-            public int EventId { get; set; }
-            public LogLevel LogLevel { get; set; } = LogLevel.Information;
-            public DateTime Time { get; set; }
-            public string Message { get; set; }
-            public Exception Exception { get; set; }
-        }
     }
 
+    public sealed class DatabaseLoggerProvider : ILoggerProvider {
+        readonly ILogEntryRepository Repository;
 
+        public LogLevel LogLevel { get; set; }
 
+        ConcurrentDictionary<string, DatabaseLogger> Instances => new ConcurrentDictionary<string, DatabaseLogger>();
 
+        public DatabaseLoggerProvider(
+            ILogEntryRepository repository
+        ) {
+            Repository = repository;
+        }
+
+        public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new DatabaseLogger(Repository) {
+            Name = name,
+            LogLevel = LogLevel
+        });
+
+        public void Dispose() {
+            Instances.Clear();
+        }
+    }
 }

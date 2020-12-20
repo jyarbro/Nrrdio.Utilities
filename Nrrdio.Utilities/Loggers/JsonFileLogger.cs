@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,14 +53,14 @@ namespace Nrrdio.Utilities.Loggers {
             Func<TState, Exception, string> formatter) {
 
             if (logLevel >= Config.LogLevel) {
-                var message = $"{Config.Name} - {formatter(state, exception)}";
+                var message = $"{Name} - {formatter(state, exception)}";
 
                 WriteableQueue.Enqueue(new LogEntry {
                     EventId = eventId.Id,
                     LogLevel = logLevel,
                     Message = message,
                     Time = DateTime.Now,
-                    Exception = exception
+                    SerializedException = JsonSerializer.Serialize(exception)
                 });
 
                 Debug.WriteLine(message);
@@ -137,19 +138,33 @@ namespace Nrrdio.Utilities.Loggers {
         }
 
         public record Configuration : INrrdioLoggerConfig {
-            public string Name { get; init; }
             public LogLevel LogLevel { get; init; } = LogLevel.Information;
             public string FolderPath { get; init; }
             public int RetainFileCount { get; init; } = 5;
             public int MaxFileSize { get; init; } = 100;
         }
+    }
 
-        public class LogEntry {
-            public int EventId { get; set; }
-            public LogLevel LogLevel { get; set; } = LogLevel.Information;
-            public DateTime Time { get; set; }
-            public string Message { get; set; }
-            public Exception Exception { get; set; }
+    public sealed class JsonFileLoggerProvider : ILoggerProvider {
+        public JsonFileLogger.Configuration Config { private get; init; }
+
+        ConcurrentDictionary<string, JsonFileLogger> Instances => new ConcurrentDictionary<string, JsonFileLogger>();
+        CancellationTokenSource CancellationTokenSource => new CancellationTokenSource();
+
+        public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new JsonFileLogger {
+            Name = name,
+            GenericConfig = Config,
+            CancellationToken = CancellationTokenSource.Token
+        });
+
+        public void Dispose() {
+            CancellationTokenSource.Cancel();
+
+            foreach (var instance in Instances) {
+                instance.Value.Dispose();
+            }
+
+            Instances.Clear();
         }
     }
 }
