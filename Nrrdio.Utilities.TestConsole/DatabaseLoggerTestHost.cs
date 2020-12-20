@@ -59,6 +59,9 @@ namespace Nrrdio.Utilities.TestConsole {
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host
                 .CreateDefaultBuilder(args)
+                .ConfigureLogging(builder => {
+                    builder.SetMinimumLevel(LogLevel.Warning);
+                })
                 .ConfigureServices((hostContext, services) => {
                     services.AddHostedService<DatabaseLoggerTestHost>();
                     services.AddSingleton<DataContext>();
