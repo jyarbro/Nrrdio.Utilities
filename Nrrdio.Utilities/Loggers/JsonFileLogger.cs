@@ -53,17 +53,14 @@ namespace Nrrdio.Utilities.Loggers {
             Func<TState, Exception, string> formatter) {
 
             if (logLevel >= Config.LogLevel) {
-                var message = $"{Name} - {formatter(state, exception)}";
-
                 WriteableQueue.Enqueue(new LogEntry {
                     EventId = eventId.Id,
                     LogLevel = logLevel,
-                    Message = message,
+                    Name = Name,
+                    Message = formatter(state, exception),
                     Time = DateTime.Now,
-                    SerializedException = JsonSerializer.Serialize(exception)
+                    SerializedException = exception is not null ? JsonSerializer.Serialize(exception) : string.Empty
                 });
-
-                Debug.WriteLine(message);
             }
         }
 

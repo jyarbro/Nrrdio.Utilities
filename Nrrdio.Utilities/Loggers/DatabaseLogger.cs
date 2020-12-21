@@ -32,17 +32,14 @@ namespace Nrrdio.Utilities.Loggers {
             Func<TState, Exception, string> formatter) {
 
             if (logLevel >= LogLevel) {
-                var message = $"{Name} - {formatter(state, exception)}";
-
                 Repository.Add(new LogEntry {
                     EventId = eventId.Id,
                     LogLevel = logLevel,
-                    Message = message,
+                    Name = Name,
+                    Message = formatter(state, exception),
                     Time = DateTime.Now,
                     SerializedException = exception is not null ? JsonSerializer.Serialize(exception) : string.Empty
                 });
-
-                Debug.WriteLine(message);
             }
         }
 
