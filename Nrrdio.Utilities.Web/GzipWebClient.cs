@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using Microsoft.Extensions.Options;
-using Nrrdio.Utilities.Web.Models;
+using Nrrdio.Utilities.Web.Models.Errors;
+using Nrrdio.Utilities.Web.Models.Options;
 using System;
 using System.Net;
 using System.Text.Json;
@@ -34,7 +35,7 @@ namespace Nrrdio.Utilities.Web {
 
             var returnObject = default(T);
 
-            if (data?.Length > 0) {
+            if (data is { Length: >0 }) {
                 try {
                     if (options is null) {
                         returnObject = JsonSerializer.Deserialize<T>(data);
@@ -58,10 +59,11 @@ namespace Nrrdio.Utilities.Web {
             try {
                 data = await DownloadStringTaskAsync(remoteUrl);
             }
+            catch (WebException e) when (e.Status == WebExceptionStatus.Timeout) { 
+                throw new HttpTimeoutError();
+            }
             catch (UriFormatException) { }
             catch (AggregateException) { }
-            catch (ArgumentException) { }
-            catch (WebException) { }
 
             return data;
         }
@@ -82,7 +84,7 @@ namespace Nrrdio.Utilities.Web {
         }
 
         string CleanUrl(string remoteUrl) {
-            if (remoteUrl is not { Length: >0 }) {
+            if (remoteUrl is not { Length: > 0 }) {
                 throw new ArgumentException($"Argument {nameof(remoteUrl)} cannot be empty or null.");
             }
 
