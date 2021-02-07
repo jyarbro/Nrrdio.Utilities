@@ -1,7 +1,7 @@
 ﻿using Nrrdio.Utilities.Text;
 using System.Text.Json;
 
-namespace Nrrdio.Utilities.Web.Query {
+namespace Nrrdio.Utilities.Web.Requests {
     public class PascalToSnakeNamingPolicy : JsonNamingPolicy {
         public override string ConvertName(string name) => name.PascalToSnake();
 

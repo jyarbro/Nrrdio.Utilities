@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nrrdio.Utilities.Web.Query;
+using Nrrdio.Utilities.Web.Requests;
 using System;
 
 namespace Nrrdio.Utilities.Tests {

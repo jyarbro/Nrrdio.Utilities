@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Nrrdio.Utilities.Web.Models.Errors;
 using Nrrdio.Utilities.Web.Models.Options;
+using Nrrdio.Utilities.Web.Requests;
 using System;
 using System.Net;
 using System.Text.Json;
@@ -66,6 +67,23 @@ namespace Nrrdio.Utilities.Web {
             catch (AggregateException) { }
 
             return data;
+        }
+
+        public string UploadJSObject(string url, string method, object data) {
+            if (method is not { Length: >0 }) {
+                throw new ArgumentException();
+            }
+
+            var remoteUrl = CleanUrl(url);
+            var remoteUri = new Uri(remoteUrl);
+
+            JsonSerializerOptions options = new JsonSerializerOptions { PropertyNamingPolicy = new PascalToSnakeNamingPolicy() };
+
+            Headers[HttpRequestHeader.ContentType] = "application/json";
+
+            var serialized = JsonSerializer.Serialize(data, options);
+
+            return UploadString(remoteUri, method, serialized);
         }
 
         protected override WebRequest GetWebRequest(Uri remoteUri) {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Web;
 
-namespace Nrrdio.Utilities.Web.Query {
+namespace Nrrdio.Utilities.Web.Requests {
     public class QuerySerializer {
         /// <summary>
         /// Converts a simple object into a query string.
