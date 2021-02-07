@@ -69,7 +69,7 @@ namespace Nrrdio.Utilities.Web {
             return data;
         }
 
-        public string UploadJSObject(string url, string method, object data) {
+        public async Task<string> UploadJSObject(string url, string method, object data) {
             if (method is not { Length: >0 }) {
                 throw new ArgumentException();
             }
@@ -83,7 +83,7 @@ namespace Nrrdio.Utilities.Web {
 
             var serialized = JsonSerializer.Serialize(data, options);
 
-            return UploadString(remoteUri, method, serialized);
+            return await Task.Run(() => UploadString(remoteUri, method, serialized));
         }
 
         protected override WebRequest GetWebRequest(Uri remoteUri) {
