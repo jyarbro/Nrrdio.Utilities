@@ -87,7 +87,7 @@ namespace Nrrdio.Utilities.Web {
         }
 
         protected override WebRequest GetWebRequest(Uri remoteUri) {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault | SecurityProtocolType.Tls13;
 
             var request = base.GetWebRequest(remoteUri) as HttpWebRequest;
 
