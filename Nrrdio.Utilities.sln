@@ -15,7 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git Configuration", "Git Co
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nrrdio.Utilities.Tests", "Nrrdio.Utilities.Tests\Nrrdio.Utilities.Tests.csproj", "{4D617EC4-EF54-485F-88AF-DDDF218638BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nrrdio.Utilities.Tests", "Nrrdio.Utilities.Tests\Nrrdio.Utilities.Tests.csproj", "{4D617EC4-EF54-485F-88AF-DDDF218638BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nrrdio.Utilities.Maths", "Nrrdio.Utilities.Maths\Nrrdio.Utilities.Maths.csproj", "{B06BC095-152D-482B-B9E5-C5388ACE37DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{4D617EC4-EF54-485F-88AF-DDDF218638BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D617EC4-EF54-485F-88AF-DDDF218638BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D617EC4-EF54-485F-88AF-DDDF218638BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B06BC095-152D-482B-B9E5-C5388ACE37DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B06BC095-152D-482B-B9E5-C5388ACE37DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B06BC095-152D-482B-B9E5-C5388ACE37DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B06BC095-152D-482B-B9E5-C5388ACE37DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
