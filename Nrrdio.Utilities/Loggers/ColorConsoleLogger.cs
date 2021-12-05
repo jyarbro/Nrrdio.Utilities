@@ -37,7 +37,7 @@ namespace Nrrdio.Utilities.Loggers {
     }
 
     public sealed class ColorConsoleLoggerProvider : ILoggerProvider {
-        ConcurrentDictionary<string, ColorConsoleLogger> Instances => new ConcurrentDictionary<string, ColorConsoleLogger>();
+        static ConcurrentDictionary<string, ColorConsoleLogger> Instances => new();
 
         public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new ColorConsoleLogger { Name = name });
         public void Dispose() => Instances.Clear();

@@ -2,7 +2,6 @@
 using Nrrdio.Utilities.Loggers.Contracts;
 using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -10,6 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nrrdio.Utilities.Loggers {
+    /// <summary>
+    /// Logs to a json file.
+    /// </summary>
     public class JsonFileLogger : INrrdioLogger, IDisposable {
         public string Name { private get; init; }
 
@@ -143,10 +145,10 @@ namespace Nrrdio.Utilities.Loggers {
     }
 
     public sealed class JsonFileLoggerProvider : ILoggerProvider {
-        public JsonFileLogger.Configuration Config { private get; init; }
+        static ConcurrentDictionary<string, JsonFileLogger> Instances => new();
 
-        ConcurrentDictionary<string, JsonFileLogger> Instances => new ConcurrentDictionary<string, JsonFileLogger>();
-        CancellationTokenSource CancellationTokenSource => new CancellationTokenSource();
+        public JsonFileLogger.Configuration Config { private get; init; }
+        public CancellationTokenSource CancellationTokenSource { private get; init; } = new();
 
         public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new JsonFileLogger {
             Name = name,

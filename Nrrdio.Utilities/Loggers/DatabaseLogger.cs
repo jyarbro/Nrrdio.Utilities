@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Nrrdio.Utilities.Loggers.Contracts;
 using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Text.Json;
 
 namespace Nrrdio.Utilities.Loggers {
@@ -48,10 +46,9 @@ namespace Nrrdio.Utilities.Loggers {
 
     public sealed class DatabaseLoggerProvider : ILoggerProvider {
         readonly ILogEntryRepository Repository;
+        static ConcurrentDictionary<string, DatabaseLogger> Instances => new();
 
         public LogLevel LogLevel { get; set; }
-
-        ConcurrentDictionary<string, DatabaseLogger> Instances => new ConcurrentDictionary<string, DatabaseLogger>();
 
         public DatabaseLoggerProvider(
             ILogEntryRepository repository
