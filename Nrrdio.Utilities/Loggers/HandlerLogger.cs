@@ -35,9 +35,9 @@ namespace Nrrdio.Utilities.Loggers {
     }
 
     public sealed class HandlerLoggerProvider : ILoggerProvider {
-        static ConcurrentDictionary<string, HandlerLogger> Instances => new();
+        public static ConcurrentDictionary<string, HandlerLogger> Instances => new();
 
-        public LogLevel LogLevel { get; set; }
+        public LogLevel LogLevel { get; init; }
 
         public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new HandlerLogger { 
             Name = name,
