@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30717.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nrrdio.Utilities", "Nrrdio.Utilities\Nrrdio.Utilities.csproj", "{9540FDE5-602D-4B82-AE0B-69DA33B56C67}"
 EndProject
@@ -17,7 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git Configuration", "Git Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nrrdio.Utilities.Tests", "Nrrdio.Utilities.Tests\Nrrdio.Utilities.Tests.csproj", "{4D617EC4-EF54-485F-88AF-DDDF218638BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nrrdio.Utilities.Maths", "Nrrdio.Utilities.Maths\Nrrdio.Utilities.Maths.csproj", "{B06BC095-152D-482B-B9E5-C5388ACE37DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nrrdio.Utilities.Maths", "Nrrdio.Utilities.Maths\Nrrdio.Utilities.Maths.csproj", "{B06BC095-152D-482B-B9E5-C5388ACE37DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nrrdio.Utilities.WinUI", "Nrrdio.Utilities.WinUI\Nrrdio.Utilities.WinUI.csproj", "{61C922D7-9A76-4DCD-BFC6-C408272F93F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{B06BC095-152D-482B-B9E5-C5388ACE37DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B06BC095-152D-482B-B9E5-C5388ACE37DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B06BC095-152D-482B-B9E5-C5388ACE37DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61C922D7-9A76-4DCD-BFC6-C408272F93F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61C922D7-9A76-4DCD-BFC6-C408272F93F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61C922D7-9A76-4DCD-BFC6-C408272F93F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61C922D7-9A76-4DCD-BFC6-C408272F93F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
