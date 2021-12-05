@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Nrrdio.Utilities.Loggers.Contracts;
 using System;
 using System.Collections.Concurrent;
 using System.Text.Json;
@@ -7,7 +8,7 @@ namespace Nrrdio.Utilities.Loggers {
     /// <summary>
     /// Returns log event to a registered handler. Useful when the handler is GUI based.
     /// </summary>
-    public class HandlerLogger : ILogger {
+    public class HandlerLogger : IHandlerLogger {
         public event EventHandler<LogEntryEventArgs> EntryAddedEvent;
 
         public string Name { private get; init; }
@@ -16,8 +17,6 @@ namespace Nrrdio.Utilities.Loggers {
         public IDisposable BeginScope<TState>(TState state) => default;
 
         public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel;
-
-        public void Dispose() { }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter) {
             var args = new LogEntryEventArgs {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 
 namespace Nrrdio.Utilities.Loggers.Contracts {
-    public interface INrrdioLoggerConfig {
+    public interface IAsyncLoggerConfig {
         public LogLevel LogLevel { init; }
     }
 }

@@ -12,10 +12,10 @@ namespace Nrrdio.Utilities.Loggers {
     /// <summary>
     /// Logs to a json file.
     /// </summary>
-    public class JsonFileLogger : INrrdioLogger, IDisposable {
+    public class JsonFileLogger : IAsyncLogger, IDisposable {
         public string Name { private get; init; }
 
-        public INrrdioLoggerConfig GenericConfig {
+        public IAsyncLoggerConfig GenericConfig {
             get => Config;
             init => Config = value as Configuration;
         }
@@ -136,7 +136,7 @@ namespace Nrrdio.Utilities.Loggers {
             }
         }
 
-        public record Configuration : INrrdioLoggerConfig {
+        public record Configuration : IAsyncLoggerConfig {
             public LogLevel LogLevel { get; init; } = LogLevel.Information;
             public string FolderPath { get; init; }
             public int RetainFileCount { get; init; } = 5;
