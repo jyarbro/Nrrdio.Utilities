@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace Nrrdio.Utilities.Maths {
     public class Polygon {
-        public IEnumerable<Point> Vertices => _Vertices;
+        public IList<Point> Vertices => _Vertices;
         protected readonly List<Point> _Vertices = new List<Point>();
 
-        public IEnumerable<Segment> Edges => _Edges;
+        public IList<Segment> Edges => _Edges;
         protected readonly List<Segment> _Edges = new List<Segment>();
 
         public Circle Circumcircle {
