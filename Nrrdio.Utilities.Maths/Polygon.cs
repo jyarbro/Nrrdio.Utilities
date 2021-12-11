@@ -25,23 +25,33 @@ namespace Nrrdio.Utilities.Maths {
         public double Area { get; private set; }
         public double SignedArea { get; private set; }
         public EWinding Winding { get; private set; }
+        public int VertexCount { get; private set; }
 
         public Polygon(params Point[] points) : this(points.ToList()) { }
         public Polygon(IEnumerable<Point> points) {
             _Vertices.AddRange(points);
+            VertexCount = _Vertices.Count;
+
+            int j;
+
+            for (var i = 0; i < VertexCount; i++) {
+                j = (i + 1) % VertexCount;
+                _Edges.Add(new Segment(_Vertices[i], _Vertices[j]));
+                _Vertices[i].AdjacentPolygons.Add(this);
+            }
+
             CalculateValuesFromVertices();
         }
 
         public bool Contains(Point point) {
-            var vertices = _Vertices.Count;
             var winding = 0;
             Segment currentLine;
             Point currentVertex;
             Point nextVertex;
             int j;
 
-            for (var i = 0; i < vertices; i++) {
-                j = (i + 1) % vertices;
+            for (var i = 0; i < VertexCount; i++) {
+                j = (i + 1) % VertexCount;
 
                 currentLine = _Edges[i];
                 currentVertex = _Vertices[i];
@@ -97,28 +107,17 @@ namespace Nrrdio.Utilities.Maths {
         }
 
         protected void CalculateValuesFromVertices() {
-            GenerateEdges();
             CalculateArea();
             CalculateCentroid();
             CalculateWinding();
         }
 
-        void GenerateEdges() {
-            var vertexCount = Vertices.Count();
-
-            for (var i = 0; i < vertexCount; i++) {
-                var j = (i + 1) % vertexCount;
-                _Edges.Add(new Segment(_Vertices[i], _Vertices[j]));
-            }
-        }
-
         // https://en.wikipedia.org/wiki/Shoelace_formula
         void CalculateArea() {
-            var vertices = _Vertices.Count;
             int j;
 
-            for (var i = 0; i < vertices; i++) {
-                j = (i + 1) % vertices;
+            for (var i = 0; i < VertexCount; i++) {
+                j = (i + 1) % VertexCount;
                 SignedArea += _Vertices[i].Cross(_Vertices[j]) * 0.5;
             }
 
@@ -127,7 +126,6 @@ namespace Nrrdio.Utilities.Maths {
 
         // https://en.wikipedia.org/wiki/Centroid
         void CalculateCentroid() {
-            var totalVertices = _Vertices.Count;
             int j;
             Point current;
             Point next;
@@ -135,8 +133,8 @@ namespace Nrrdio.Utilities.Maths {
             double y = 0d;
             double cross;
 
-            for (var i = 0; i < totalVertices; i++) {
-                j = (i + 1) % totalVertices;
+            for (var i = 0; i < VertexCount; i++) {
+                j = (i + 1) % VertexCount;
 
                 current = _Vertices[i];
                 next = _Vertices[j];
@@ -167,7 +165,7 @@ namespace Nrrdio.Utilities.Maths {
 
         public override bool Equals(object obj) => (obj is Polygon other) && Equals(other);
         public bool Equals(Polygon other) {
-            if (_Vertices.Count != other._Vertices.Count) {
+            if (VertexCount != other.VertexCount) {
                 return false;
             }
 
@@ -184,8 +182,8 @@ namespace Nrrdio.Utilities.Maths {
             if (start >= 0) {
                 areEqual = true;
 
-                for (var i = 0; i < other._Vertices.Count; i++) {
-                    var j = (i + start) % other._Vertices.Count;
+                for (var i = 0; i < other.VertexCount; i++) {
+                    var j = (i + start) % other.VertexCount;
 
                     if (other._Vertices[i] != _Vertices[j]) {
                         areEqual = false;
@@ -206,7 +204,7 @@ namespace Nrrdio.Utilities.Maths {
         public override int GetHashCode() {
             var hashCode = _Vertices[0].GetHashCode();
 
-            for (var i = 1; i < _Vertices.Count; i++) {
+            for (var i = 1; i < VertexCount; i++) {
                 hashCode ^= _Vertices[i].GetHashCode();
             }
 
