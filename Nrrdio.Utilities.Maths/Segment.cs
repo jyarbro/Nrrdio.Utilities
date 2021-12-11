@@ -105,6 +105,10 @@
             return (intersects, intersection, intersectionEnd);
         }
 
+        public double Cross(Point point) => (point.Y - Point1.Y) * (Point2.X - Point1.X) - (point.X - Point1.X) * (Point2.Y - Point1.Y);
+
+        public bool Contains(Point point) => Cross(point) == 0;
+
         public Point Lerp(double by) => Point1.Lerp(Point2, by);
 
         public static bool operator ==(Segment left, Segment right) => Equals(left, right);

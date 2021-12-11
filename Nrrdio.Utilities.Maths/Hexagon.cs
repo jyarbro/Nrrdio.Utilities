@@ -1,4 +1,6 @@
-﻿namespace Nrrdio.Utilities.Maths {
+﻿using System.Collections.Generic;
+
+namespace Nrrdio.Utilities.Maths {
     public class Hexagon : Polygon {
         const double BASE_APOTHEM = 0.8660254037844386467637231708;
 
@@ -17,6 +19,7 @@
 
         public Hexagon(Point center, int segmentsPerSide, double segmentLength) {
             Radius = segmentsPerSide * segmentLength;
+
             var lerpBy = 1d / segmentsPerSide;
 
             var vertex0 = new Point(center.X + Radius, center.Y);
@@ -26,18 +29,20 @@
             var vertex4 = new Point(center.X - Radius * 0.5d, center.Y - Apothem);
             var vertex5 = new Point(center.X + Radius * 0.5d, center.Y - Apothem);
 
-            addSide(vertex0, vertex1);
-            addSide(vertex1, vertex2);
-            addSide(vertex2, vertex3);
-            addSide(vertex3, vertex4);
-            addSide(vertex4, vertex5);
-            addSide(vertex5, vertex0);
+            var points = new List<Point>();
 
-            CalculateValuesFromVertices();
+            addSegmentedSide(vertex0, vertex1);
+            addSegmentedSide(vertex1, vertex2);
+            addSegmentedSide(vertex2, vertex3);
+            addSegmentedSide(vertex3, vertex4);
+            addSegmentedSide(vertex4, vertex5);
+            addSegmentedSide(vertex5, vertex0);
 
-            void addSide(Point sideVertex1, Point sideVertex2) {
+            AddVertices(points);
+
+            void addSegmentedSide(Point sideVertex1, Point sideVertex2) {
                 for (var i = 0; i < segmentsPerSide; i++) {
-                    _Vertices.Add(sideVertex1.Lerp(sideVertex2, lerpBy * i));
+                    points.Add(sideVertex1.Lerp(sideVertex2, lerpBy * i));
                 }
             }
         }

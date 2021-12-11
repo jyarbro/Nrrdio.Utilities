@@ -25,22 +25,16 @@ namespace Nrrdio.Utilities.Maths {
         public double Area { get; private set; }
         public double SignedArea { get; private set; }
         public EWinding Winding { get; private set; }
-        public int VertexCount { get; private set; }
+        public int VertexCount { get; protected set; }
 
-        public Polygon(params Point[] points) : this(points.ToList()) { }
+        public Polygon() { }
+        
+        public Polygon(params Point[] points) {
+            AddVertices(points);
+        }
+
         public Polygon(IEnumerable<Point> points) {
-            _Vertices.AddRange(points);
-            VertexCount = _Vertices.Count;
-
-            int j;
-
-            for (var i = 0; i < VertexCount; i++) {
-                j = (i + 1) % VertexCount;
-                _Edges.Add(new Segment(_Vertices[i], _Vertices[j]));
-                _Vertices[i].AdjacentPolygons.Add(this);
-            }
-
-            CalculateValuesFromVertices();
+            AddVertices(points);
         }
 
         public bool Contains(Point point) {
@@ -104,6 +98,25 @@ namespace Nrrdio.Utilities.Maths {
             }
 
             return true;
+        }
+
+        protected void AddVertices(IEnumerable<Point> points) {
+            if (points is null || !points.Any()) {
+                throw new ArgumentException(nameof(points));
+            }
+
+            _Vertices.AddRange(points);
+            VertexCount = _Vertices.Count;
+
+            int j;
+
+            for (var i = 0; i < VertexCount; i++) {
+                j = (i + 1) % VertexCount;
+                _Edges.Add(new Segment(_Vertices[i], _Vertices[j]));
+                _Vertices[i].AdjacentPolygons.Add(this);
+            }
+
+            CalculateValuesFromVertices();
         }
 
         protected void CalculateValuesFromVertices() {

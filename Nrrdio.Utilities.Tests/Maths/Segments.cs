@@ -42,5 +42,13 @@ namespace Nrrdio.Utilities.Tests {
             var intersection = (false, default(Point), default(Point));
             Assert.AreEqual(intersection, segment1.Intersects(segment2));
         }
+
+        [TestMethod]
+        public void Contains() {
+            var segment = new Segment(new Point(2, 8), new Point(4.59234123, 12));
+
+            Assert.IsTrue(segment.Contains(new Point(6.59234123 / 2, 10)));
+            Assert.IsFalse(segment.Contains(new Point(6, 9)));
+        }
     }
 }
