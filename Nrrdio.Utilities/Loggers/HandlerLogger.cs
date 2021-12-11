@@ -30,7 +30,7 @@ namespace Nrrdio.Utilities.Loggers {
                 }
             };
 
-            EntryAddedEvent.Invoke(this, args);
+            EntryAddedEvent?.Invoke(this, args);
         }
     }
 
