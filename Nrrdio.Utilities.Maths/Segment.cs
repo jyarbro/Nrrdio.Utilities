@@ -1,4 +1,7 @@
-﻿namespace Nrrdio.Utilities.Maths {
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Nrrdio.Utilities.Maths {
     public class Segment {
         public Point Vector { get; }
         public Point Point1 { get; }
@@ -108,6 +111,8 @@
         public double Cross(Point point) => (point.Y - Point1.Y) * (Point2.X - Point1.X) - (point.X - Point1.X) * (Point2.Y - Point1.Y);
 
         public bool Contains(Point point) => Cross(point) == 0;
+        public bool Contains(IEnumerable<Point> points) => points.All(point => Contains(point));
+        public bool Contains(params Point[] points) => Contains(points);
 
         public Point Lerp(double by) => Point1.Lerp(Point2, by);
 
