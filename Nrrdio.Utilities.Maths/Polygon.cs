@@ -37,9 +37,6 @@ namespace Nrrdio.Utilities.Maths {
             AddVertices(points);
         }
 
-        /// <summary>
-        /// Checks if the polygon contains a given point within, but not including the edges.
-        /// </summary>
         public bool Contains(Point point) {
             var winding = 0;
             Segment currentLine;
@@ -54,7 +51,7 @@ namespace Nrrdio.Utilities.Maths {
                 currentVertex = _Vertices[i];
                 nextVertex = _Vertices[j];
 
-                if (currentVertex.Y <= point.Y) {
+                if (currentVertex.Y < point.Y) {
                     if (nextVertex.Y > point.Y) {
                         if (point.NearLine(currentLine) > 0) {
                             winding++;
@@ -63,7 +60,7 @@ namespace Nrrdio.Utilities.Maths {
                 }
 
                 else {
-                    if (nextVertex.Y <= point.Y) {
+                    if (nextVertex.Y < point.Y) {
                         if (point.NearLine(currentLine) < 0) {
                             winding--;
                         }
@@ -71,7 +68,13 @@ namespace Nrrdio.Utilities.Maths {
                 }
             }
 
-            return winding != 0;
+            var contains = winding != 0;
+
+            if (!contains) {
+                contains = Edges.Any(edge => edge.Contains(point));
+            }
+
+            return contains;
         }
         public bool Contains(IEnumerable<Point> points) => points.All(point => Contains(point));
         public bool Contains(params Point[] points) => Contains(points);

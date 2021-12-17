@@ -143,5 +143,58 @@ namespace Nrrdio.Utilities.Tests {
 
             Assert.IsFalse(polygon.Contains(testPoints));
         }
+
+        [TestMethod]
+        public void ContainsEdges() {
+            var polygon = new Polygon(new List<Point> {
+                new Point(4, 4),
+                new Point(2, 4),
+                new Point(2, 0),
+                new Point(4, 0),
+                new Point(4, 1),
+                new Point(5, 1),
+                new Point(5, 3),
+                new Point(4, 3),
+            });
+
+            var reversePolygon = new Polygon(new List<Point> {
+                new Point(4, 3),
+                new Point(5, 3),
+                new Point(5, 1),
+                new Point(4, 1),
+                new Point(4, 0),
+                new Point(2, 0),
+                new Point(2, 4),
+                new Point(4, 4),
+            });
+
+            var testPoint = new Point(4.5, 3);
+            Assert.IsTrue(polygon.Contains(testPoint));
+            Assert.IsTrue(reversePolygon.Contains(testPoint));
+
+            testPoint = new Point(3, 0);
+            Assert.IsTrue(polygon.Contains(testPoint));
+            Assert.IsTrue(reversePolygon.Contains(testPoint));
+
+            testPoint = new Point(4, 3);
+            Assert.IsTrue(polygon.Contains(testPoint));
+            Assert.IsTrue(reversePolygon.Contains(testPoint));
+
+            testPoint = new Point(5, 2);
+            Assert.IsTrue(polygon.Contains(testPoint));
+            Assert.IsTrue(reversePolygon.Contains(testPoint));
+
+            testPoint = new Point(2, 2);
+            Assert.IsTrue(polygon.Contains(testPoint));
+            Assert.IsTrue(reversePolygon.Contains(testPoint));
+
+            testPoint = new Point(2, 4);
+            Assert.IsTrue(polygon.Contains(testPoint));
+            Assert.IsTrue(reversePolygon.Contains(testPoint));
+
+            testPoint = new Point(3, 4);
+            Assert.IsTrue(polygon.Contains(testPoint));
+            Assert.IsTrue(reversePolygon.Contains(testPoint));
+        }
     }
 }
