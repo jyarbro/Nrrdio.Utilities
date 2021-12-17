@@ -37,6 +37,9 @@ namespace Nrrdio.Utilities.Maths {
             AddVertices(points);
         }
 
+        /// <summary>
+        /// Checks if the polygon contains a given point within, but not including the edges.
+        /// </summary>
         public bool Contains(Point point) {
             var winding = 0;
             Segment currentLine;
@@ -70,6 +73,8 @@ namespace Nrrdio.Utilities.Maths {
 
             return winding != 0;
         }
+
+        public bool Contains(IEnumerable<Point> points) => points.All(point => Contains(point));
 
         public bool SharesEdgeWith(Polygon other) => 2 == Vertices.Where(other.Vertices.Contains).Count();
 
