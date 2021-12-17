@@ -73,8 +73,8 @@ namespace Nrrdio.Utilities.Maths {
 
             return winding != 0;
         }
-
         public bool Contains(IEnumerable<Point> points) => points.All(point => Contains(point));
+        public bool Contains(params Point[] points) => Contains(points);
 
         public bool SharesEdgeWith(Polygon other) => 2 == Vertices.Where(other.Vertices.Contains).Count();
 
