@@ -27,6 +27,11 @@ namespace Nrrdio.Utilities.Maths {
         public EWinding Winding { get; private set; }
         public int VertexCount { get; protected set; }
 
+        double[] VertexX { get; set; }
+        double[] VertexY { get; set; }
+        double[] Multiples { get; set; }
+        double[] Constants { get; set; }
+
         public Polygon() { }
         
         public Polygon(params Point[] points) {
@@ -38,37 +43,19 @@ namespace Nrrdio.Utilities.Maths {
         }
 
         public bool Contains(Point point) {
-            var winding = 0;
-            Segment currentLine;
-            Point currentVertex;
-            Point nextVertex;
-            int j;
+            int i, j = VertexCount - 1;
+            bool contains = false;
 
-            for (var i = 0; i < VertexCount; i++) {
-                j = (i + 1) % VertexCount;
-
-                currentLine = _Edges[i];
-                currentVertex = _Vertices[i];
-                nextVertex = _Vertices[j];
-
-                if (currentVertex.Y < point.Y) {
-                    if (nextVertex.Y > point.Y) {
-                        if (point.NearLine(currentLine) > 0) {
-                            winding++;
-                        }
+            for (i = 0; i < VertexCount; i++) {
+                if (VertexY[i] < point.Y && VertexY[j] >= point.Y
+                 || VertexY[j] < point.Y && VertexY[i] >= point.Y) {
+                    if (VertexX[i] + (point.Y - VertexY[i]) / (VertexY[j] - VertexY[i]) * (VertexX[j] - VertexX[i]) < point.X) {
+                        contains = !contains;
                     }
                 }
 
-                else {
-                    if (nextVertex.Y < point.Y) {
-                        if (point.NearLine(currentLine) < 0) {
-                            winding--;
-                        }
-                    }
-                }
+                j = i;
             }
-
-            var contains = winding != 0;
 
             if (!contains) {
                 contains = Edges.Any(edge => edge.Contains(point));
@@ -123,6 +110,11 @@ namespace Nrrdio.Utilities.Maths {
                 _Edges.Add(new Segment(_Vertices[i], _Vertices[j]));
                 _Vertices[i].AdjacentPolygons.Add(this);
             }
+
+            VertexX = Vertices.Select(v => v.X).ToArray();
+            VertexY = Vertices.Select(v => v.Y).ToArray();
+            Multiples = new double[VertexCount];
+            Constants = new double[VertexCount];
 
             CalculateValuesFromVertices();
         }

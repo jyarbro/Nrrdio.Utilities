@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nrrdio.Utilities.Maths {
@@ -110,7 +111,27 @@ namespace Nrrdio.Utilities.Maths {
 
         public double Cross(Point point) => (point.Y - Point1.Y) * (Point2.X - Point1.X) - (point.X - Point1.X) * (Point2.Y - Point1.Y);
 
-        public bool Contains(Point point) => Cross(point) == 0;
+        public bool Contains(Point point) {
+            if (Point1.X == Point2.X) {
+                if (Cross(point) == 0) {
+                    if ((point.X >= Point1.X && point.X <= Point2.X
+                      || point.X >= Point2.X && point.X <= Point1.X)
+                     && (point.Y >= Point1.Y && point.Y <= Point2.Y
+                      || point.Y >= Point2.Y && point.Y <= Point1.Y)) {
+
+                        if (Point1.X - Point2.X == 0) {
+                            return true; // vertical line
+                        }
+
+                        return Math.Abs(point.Y - (Slope * point.X + InterceptY)) == 0;
+                    }
+                }
+
+                return false;
+            }
+            else return Cross(point) == 0;
+        }
+
         public bool Contains(IEnumerable<Point> points) => points.All(point => Contains(point));
         public bool Contains(params Point[] points) => points.All(point => Contains(point));
 

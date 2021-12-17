@@ -102,7 +102,6 @@ namespace Nrrdio.Utilities.Tests {
                 new Point(4, 1),
                 new Point(5, 1),
                 new Point(5, 3),
-                new Point(4, 3),
             };
 
             var polygon = new Polygon(points);
@@ -113,7 +112,13 @@ namespace Nrrdio.Utilities.Tests {
             testPoint = new Point(4.5, 2.9999999);
             Assert.IsTrue(polygon.Contains(testPoint));
 
-            testPoint = new Point(4.5, 3.1);
+            testPoint = new Point(4.5, 3.51);
+            Assert.IsFalse(polygon.Contains(testPoint));
+
+            testPoint = new Point(5, 3.1);
+            Assert.IsFalse(polygon.Contains(testPoint));
+
+            testPoint = new Point(4.1, 4);
             Assert.IsFalse(polygon.Contains(testPoint));
         }
 
@@ -127,7 +132,6 @@ namespace Nrrdio.Utilities.Tests {
                 new Point(4, 1),
                 new Point(5, 1),
                 new Point(5, 3),
-                new Point(4, 3),
             };
 
             var polygon = new Polygon(points);
@@ -139,7 +143,7 @@ namespace Nrrdio.Utilities.Tests {
 
             Assert.IsTrue(polygon.Contains(testPoints));
 
-            testPoints.Add(new Point(4.5, 3.0000001));
+            testPoints.Add(new Point(4.5, 3.5000001));
 
             Assert.IsFalse(polygon.Contains(testPoints));
         }
@@ -154,11 +158,9 @@ namespace Nrrdio.Utilities.Tests {
                 new Point(4, 1),
                 new Point(5, 1),
                 new Point(5, 3),
-                new Point(4, 3),
             });
 
             var reversePolygon = new Polygon(new List<Point> {
-                new Point(4, 3),
                 new Point(5, 3),
                 new Point(5, 1),
                 new Point(4, 1),
@@ -168,7 +170,7 @@ namespace Nrrdio.Utilities.Tests {
                 new Point(4, 4),
             });
 
-            var testPoint = new Point(4.5, 3);
+            var testPoint = new Point(4.5, 3.5);
             Assert.IsTrue(polygon.Contains(testPoint));
             Assert.IsTrue(reversePolygon.Contains(testPoint));
 
@@ -176,7 +178,7 @@ namespace Nrrdio.Utilities.Tests {
             Assert.IsTrue(polygon.Contains(testPoint));
             Assert.IsTrue(reversePolygon.Contains(testPoint));
 
-            testPoint = new Point(4, 3);
+            testPoint = new Point(4, 1);
             Assert.IsTrue(polygon.Contains(testPoint));
             Assert.IsTrue(reversePolygon.Contains(testPoint));
 

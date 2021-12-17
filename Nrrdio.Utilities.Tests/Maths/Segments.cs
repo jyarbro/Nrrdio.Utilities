@@ -47,6 +47,7 @@ namespace Nrrdio.Utilities.Tests {
         public void Contains() {
             var segment = new Segment(new Point(2, 8), new Point(4.59234123, 12));
 
+            Assert.IsFalse(segment.Contains(new Point(0, .00004)));
             Assert.IsTrue(segment.Contains(new Point(6.59234123 / 2, 10)));
             Assert.IsFalse(segment.Contains(new Point(6, 9)));
         }
