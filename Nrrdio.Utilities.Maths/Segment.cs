@@ -112,7 +112,7 @@ namespace Nrrdio.Utilities.Maths {
 
         public bool Contains(Point point) => Cross(point) == 0;
         public bool Contains(IEnumerable<Point> points) => points.All(point => Contains(point));
-        public bool Contains(params Point[] points) => Contains(points);
+        public bool Contains(params Point[] points) => points.All(point => Contains(point));
 
         public Point Lerp(double by) => Point1.Lerp(Point2, by);
 

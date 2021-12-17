@@ -77,7 +77,7 @@ namespace Nrrdio.Utilities.Maths {
             return contains;
         }
         public bool Contains(IEnumerable<Point> points) => points.All(point => Contains(point));
-        public bool Contains(params Point[] points) => Contains(points);
+        public bool Contains(params Point[] points) => points.All(point => Contains(point));
 
         public bool SharesEdgeWith(Polygon other) => 2 == Vertices.Where(other.Vertices.Contains).Count();
 
