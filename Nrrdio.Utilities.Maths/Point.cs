@@ -21,16 +21,16 @@ namespace Nrrdio.Utilities.Maths {
         public double Distance(Point other) => (this - other).Magnitude;
 
         /// <summary>
-        /// > 0 : point is to the left of the line
+        /// > 0 : point is to the relative left of the line
         /// = 0 : point is on the line
-        /// < 0 : point is to the right of the line
+        /// < 0 : point is to the relative right of the line
         /// </summary>
         public double NearLine(Segment segment) => segment.Vector.Cross(this - segment.Point1);
 
         /// <summary>
-        /// > 0 : This is on right of the other.
+        /// > 0 : This is on relative right of the other.
         /// = 0 : Overlapping
-        /// < 0 : This is on left of the other.
+        /// < 0 : This is on relative left of the other.
         /// </summary>
         public double Cross(Point other) => X * other.Y - Y * other.X;
 
