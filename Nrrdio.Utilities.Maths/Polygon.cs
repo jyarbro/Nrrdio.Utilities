@@ -47,8 +47,8 @@ namespace Nrrdio.Utilities.Maths {
             bool contains = false;
 
             for (i = 0; i < VertexCount; i++) {
-                if (VertexY[i] < point.Y && VertexY[j] >= point.Y
-                 || VertexY[j] < point.Y && VertexY[i] >= point.Y) {
+                if (VertexY[i] <= point.Y && point.Y <= VertexY[j]
+                 || VertexY[j] <= point.Y && point.Y <= VertexY[i]) {
                     if (VertexX[i] + (point.Y - VertexY[i]) / (VertexY[j] - VertexY[i]) * (VertexX[j] - VertexX[i]) < point.X) {
                         contains = !contains;
                     }
