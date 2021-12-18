@@ -17,6 +17,14 @@ namespace Nrrdio.Utilities.Maths {
             Vector = point2 - point1;
         }
 
+        /// <summary>
+        /// Determines if and where another segment intersects with this segment.
+        /// </summary>
+        /// <returns>
+        /// bool intersects
+        /// Point intersection = null
+        /// Point intersectionEnd = null
+        /// </returns>
         public (bool, Point, Point) Intersects(Segment other) {
             var intersects = false;
             Point intersection = null;

@@ -11,14 +11,14 @@ namespace Nrrdio.Utilities.Maths {
 
         // https://en.wikipedia.org/wiki/Polar_coordinate_system
         public double PhiAngle => Math.Atan2(Y, X);
-        public double RadialMagnitude => Math.Sqrt(X * X + Y * Y);
+        public double Magnitude => Math.Sqrt(X * X + Y * Y);
 
         public Point(double x, double y) {
             X = x;
             Y = y;
         }
 
-        public double Distance(Point other) => (this - other).RadialMagnitude;
+        public double Distance(Point other) => (this - other).Magnitude;
 
         /// <summary>
         /// > 0 : point is to the left of the line

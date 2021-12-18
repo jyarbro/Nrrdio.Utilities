@@ -35,7 +35,7 @@ namespace Nrrdio.Utilities.Tests {
         public void SixVertices() {
             var hexagon = new Hexagon(new Point(0, 0), 6, 1);
 
-            var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).RadialMagnitude == hexagon.Radius);
+            var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).Magnitude == hexagon.Radius);
 
             Assert.AreEqual(6, vertices.Count());
         }
@@ -44,7 +44,7 @@ namespace Nrrdio.Utilities.Tests {
         public void SixApothems() {
             var hexagon = new Hexagon(new Point(0, 0), 6, 1);
 
-            var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).RadialMagnitude == hexagon.Apothem);
+            var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).Magnitude == hexagon.Apothem);
 
             Assert.AreEqual(6, vertices.Count());
         }
@@ -53,10 +53,10 @@ namespace Nrrdio.Utilities.Tests {
         public void Apothems() {
             var hexagon = new Hexagon(new Point(0, 0), 2, 1);
 
-            var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).RadialMagnitude != hexagon.Radius).ToList();
+            var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).Magnitude != hexagon.Radius).ToList();
 
             for (var i = 0; i < vertices.Count; i++) {
-                var current = (hexagon.Centroid - vertices[i]).RadialMagnitude;
+                var current = (hexagon.Centroid - vertices[i]).Magnitude;
                 Assert.AreEqual($"{1.7320508075688772f:#############}", $"{current:#############}");
             }
         }

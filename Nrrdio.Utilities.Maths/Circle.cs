@@ -38,7 +38,7 @@ namespace Nrrdio.Utilities.Maths {
                 var circlePoints = new List<Point>(points);
 
                 // Take the 3 points with the highest magnitude from a centroid and ignore all the internal points. This helps with generating circumcircles.
-                circlePoints = circlePoints.OrderByDescending(p => (centroid - p).RadialMagnitude).Take(3).ToList();
+                circlePoints = circlePoints.OrderByDescending(p => (centroid - p).Magnitude).Take(3).ToList();
 
                 FromCircumcircle(circlePoints[0], circlePoints[1], circlePoints[2]);
             }
