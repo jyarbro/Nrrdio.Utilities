@@ -117,16 +117,9 @@ namespace Nrrdio.Utilities.Maths {
             return (intersects, intersection, intersectionEnd);
         }
 
-        public double Cross(Point point) => (point.Y - Point1.Y) * (Point2.X - Point1.X) - (point.X - Point1.X) * (Point2.Y - Point1.Y);
+        public double Cross(Point point) => Vector.Cross(point - Point1);
 
-        public bool Contains(Point point) {
-            var ma = (Point1 - Point2).Magnitude;
-            var mb = (point - Point1).Magnitude;
-            var mc = (point - Point2).Magnitude;
-
-            return ma == mb + mc;
-        }
-
+        public bool Contains(Point point) => Vector.Magnitude == (point - Point1).Magnitude + (point - Point2).Magnitude;
         public bool Contains(IEnumerable<Point> points) => points.All(point => Contains(point));
         public bool Contains(params Point[] points) => points.All(point => Contains(point));
 

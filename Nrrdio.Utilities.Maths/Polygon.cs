@@ -27,11 +27,6 @@ namespace Nrrdio.Utilities.Maths {
         public EWinding Winding { get; private set; }
         public int VertexCount { get; protected set; }
 
-        double[] VertexX { get; set; }
-        double[] VertexY { get; set; }
-        double[] Multiples { get; set; }
-        double[] Constants { get; set; }
-
         public Polygon() { }
         
         public Polygon(params Point[] points) {
@@ -43,18 +38,21 @@ namespace Nrrdio.Utilities.Maths {
         }
 
         public bool Contains(Point point) {
-            int i, j = VertexCount - 1;
             bool contains = false;
 
-            for (i = 0; i < VertexCount; i++) {
-                if (VertexY[i] <= point.Y && point.Y <= VertexY[j]
-                 || VertexY[j] <= point.Y && point.Y <= VertexY[i]) {
-                    if (VertexX[i] + (point.Y - VertexY[i]) / (VertexY[j] - VertexY[i]) * (VertexX[j] - VertexX[i]) < point.X) {
+            for (var i = 0; i < VertexCount; i++) {
+                var j = (i + 1) % VertexCount;
+                var point1 = Vertices[i];
+                var point2 = Vertices[j];
+                var vector1 = point1 - point2;
+                var vector2 = point - point2;
+
+                if (point1.Y <= point.Y && point.Y <= point2.Y
+                 || point2.Y <= point.Y && point.Y <= point1.Y) {
+                    if (point2.X + vector2.Y / vector1.Y * vector1.X < point.X) {
                         contains = !contains;
                     }
                 }
-
-                j = i;
             }
 
             if (!contains) {
@@ -110,11 +108,6 @@ namespace Nrrdio.Utilities.Maths {
                 _Edges.Add(new Segment(_Vertices[i], _Vertices[j]));
                 _Vertices[i].AdjacentPolygons.Add(this);
             }
-
-            VertexX = Vertices.Select(v => v.X).ToArray();
-            VertexY = Vertices.Select(v => v.Y).ToArray();
-            Multiples = new double[VertexCount];
-            Constants = new double[VertexCount];
 
             CalculateValuesFromVertices();
         }
