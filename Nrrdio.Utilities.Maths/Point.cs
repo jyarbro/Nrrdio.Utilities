@@ -13,6 +13,7 @@ namespace Nrrdio.Utilities.Maths {
         public double PhiAngle => Math.Atan2(Y, X);
         public double Magnitude => Math.Sqrt(X * X + Y * Y);
 
+        public Point(Point other) : this(other.X, other.Y) { }
         public Point(double x, double y) {
             X = x;
             Y = y;

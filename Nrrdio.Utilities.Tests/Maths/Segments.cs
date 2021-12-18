@@ -30,7 +30,34 @@ namespace Nrrdio.Utilities.Tests {
             var segment1 = new Segment(new Point(2, 0), new Point(4, 4));
             var segment2 = new Segment(new Point(3, 2), new Point(3.5, 3));
 
-            var intersection = (true, new Point(3, 2), new Point(3.5, 3));
+            var intersection = (true, segment2.Point1, segment2.Point2);
+            Assert.AreEqual(intersection, segment1.Intersects(segment2));
+        }
+
+        [TestMethod]
+        public void OverlapsReverse() {
+            var segment1 = new Segment(new Point(2, 0), new Point(4, 4));
+            var segment2 = new Segment(new Point(3.5, 3), new Point(3, 2));
+
+            var intersection = (true, segment2.Point1, segment2.Point2);
+            Assert.AreEqual(intersection, segment1.Intersects(segment2));
+        }
+
+        [TestMethod]
+        public void PartialOverlap() {
+            var segment1 = new Segment(new Point(2, 0), new Point(4, 4));
+            var segment2 = new Segment(new Point(3, 2), new Point(5, 6));
+
+            var intersection = (true, segment2.Point1, segment1.Point2);
+            Assert.AreEqual(intersection, segment1.Intersects(segment2));
+        }
+
+        [TestMethod]
+        public void PartialOverlapReverse() {
+            var segment1 = new Segment(new Point(2, 0), new Point(4, 4));
+            var segment2 = new Segment(new Point(5, 6), new Point(3, 2));
+
+            var intersection = (true, segment1.Point2, segment2.Point2);
             Assert.AreEqual(intersection, segment1.Intersects(segment2));
         }
 

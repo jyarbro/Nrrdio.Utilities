@@ -10,6 +10,7 @@ namespace Nrrdio.Utilities.Maths {
         public double Slope => (Point2.Y - Point1.Y) / (Point2.X - Point1.X);
         public double InterceptY => Point1.Y - (Slope * Point1.X);
         public double InterceptX => -InterceptY / Slope;
+        public bool IsPoint => Point1 == Point2;
 
         public Segment(Point point1, Point point2) {
             Point1 = point1;
@@ -41,24 +42,21 @@ namespace Nrrdio.Utilities.Maths {
                     intersects = false;
                 }
                 else {
-                    var thisIsPoint = Point1 == Point2;
-                    var otherIsPoint = other.Point1 == other.Point2;
-
                     // both are single points
-                    if (thisIsPoint && otherIsPoint) {
+                    if (IsPoint && other.IsPoint) {
                         // both are the same point
                         intersects = Point1 == other.Point1;
-                        intersection = new Point(Point1.X, Point1.Y);
+                        intersection = new Point(Point1);
                     }
                     // only this segment is a point
-                    else if (thisIsPoint) {
+                    else if (IsPoint) {
                         intersects = Point1.NearLine(other) == 0;
-                        intersection = new Point(Point1.X, Point1.Y);
+                        intersection = new Point(Point1);
                     }
                     // only the other line is a point
-                    else if (otherIsPoint) {
+                    else if (other.IsPoint) {
                         intersects = other.Point1.NearLine(this) == 0;
-                        intersection = new Point(other.Point1.X, other.Point1.Y);
+                        intersection = new Point(other.Point1);
                     }
                     // they are both segments
                     else {
