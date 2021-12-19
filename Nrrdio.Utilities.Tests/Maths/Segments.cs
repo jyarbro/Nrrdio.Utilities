@@ -26,6 +26,15 @@ namespace Nrrdio.Utilities.Tests {
         }
 
         [TestMethod]
+        public void LargeVerticalIntersects() {
+            var segment1 = new Segment(new Point(0, 0), new Point(0, 600));
+            var segment2 = new Segment(new Point(-80.896208128707386, 192.00151880011086), new Point(246.73060356878347, 16.227559135922846));
+
+            Assert.AreEqual((true, new Point(0, 148.60016605084175), default(Point)), segment1.Intersects(segment2));
+            Assert.AreEqual((true, new Point(0, 148.60016605084175), default(Point)), segment2.Intersects(segment1));
+        }
+
+        [TestMethod]
         public void NoIntersect() {
             var segment1 = new Segment(new Point(1, -2), new Point(2.5, 1));
             var segment2 = new Segment(new Point(1, 4), new Point(4, 1));

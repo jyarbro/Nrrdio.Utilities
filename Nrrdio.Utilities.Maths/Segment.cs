@@ -121,7 +121,7 @@ namespace Nrrdio.Utilities.Maths {
 
         public double Cross(Point point) => Vector.Cross(point - Point1);
 
-        public bool Contains(Point point) => Math.Abs(Vector.Magnitude - ((point - Point1).Magnitude + (point - Point2).Magnitude)) < 1e-15;
+        public bool Contains(Point point) => Math.Abs(Vector.Magnitude - ((point - Point1).Magnitude + (point - Point2).Magnitude)) < 1e-10;
         public bool Contains(IEnumerable<Point> points) => points.All(point => Contains(point));
         public bool Contains(params Point[] points) => points.All(point => Contains(point));
 
