@@ -134,5 +134,6 @@ namespace Nrrdio.Utilities.Maths {
         public static bool Equals(Segment left, Segment right) => left.Equals(right);
 
         public override int GetHashCode() => ((int)Point1.X ^ (int)Point2.X ^ (int)Point1.Y ^ (int)Point2.Y).GetHashCode();
+        public override string ToString() => $"{nameof(Segment)} [{Point1} {Point2}]";
     }
 }

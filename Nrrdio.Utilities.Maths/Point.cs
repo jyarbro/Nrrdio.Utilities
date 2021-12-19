@@ -63,11 +63,10 @@ namespace Nrrdio.Utilities.Maths {
         public override bool Equals(object obj) => (obj is Point other) && Equals(other);
         public static bool Equals(Point left, Point right) => left.Equals(right);
         public bool Equals(Point other) => Math.Abs(X - other.X) < 1e-15 && Math.Abs(Y - other.Y) < 1e-15;
-
-        public override string ToString() => $"{nameof(Point)} ({X:0.###}, {Y:0.###})";
-        public override int GetHashCode() => X.GetHashCode() ^ Y.GetHashCode() << 2;
-
         public int CompareTo(Point other) => PhiAngle.CompareTo(other.PhiAngle);
+
+        public override int GetHashCode() => X.GetHashCode() ^ Y.GetHashCode() << 2;
+        public override string ToString() => $"{nameof(Point)} ({X:0.###}, {Y:0.###})";
     }
 
     public static class PointExtensions {

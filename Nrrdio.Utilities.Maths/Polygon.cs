@@ -206,7 +206,6 @@ namespace Nrrdio.Utilities.Maths {
         }
         public static bool Equals(Polygon left, Polygon right) => left.Equals(right);
 
-        public override string ToString() => $"{nameof(Polygon)} ({string.Join("), (", Vertices)})";
         public override int GetHashCode() {
             var hashCode = _Vertices[0].GetHashCode();
 
@@ -216,6 +215,7 @@ namespace Nrrdio.Utilities.Maths {
 
             return hashCode;
         }
+        public override string ToString() => $"{nameof(Polygon)} [{string.Join("], [", Vertices)}]";
 
         public enum EWinding {
             CLOCKWISE, COUNTERCLOCKWISE, NONE
