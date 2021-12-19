@@ -107,8 +107,12 @@ namespace Nrrdio.Utilities.Maths {
 
                 // confirmed intersection
                 if (intersectWithThis >= 0 && intersectWithThis <= 1) {
-                    intersects = true;
-                    intersection = Point1 + intersectWithThis * Vector;
+                    var lineIntersection = Point1 + intersectWithThis * Vector;
+
+                    if (Contains(lineIntersection) && other.Contains(lineIntersection)) { 
+                        intersects = true;
+                        intersection = Point1 + intersectWithThis * Vector;
+                    }
                 }
             }
 
@@ -117,7 +121,7 @@ namespace Nrrdio.Utilities.Maths {
 
         public double Cross(Point point) => Vector.Cross(point - Point1);
 
-        public bool Contains(Point point) => Vector.Magnitude == (point - Point1).Magnitude + (point - Point2).Magnitude;
+        public bool Contains(Point point) => Math.Abs(Vector.Magnitude - ((point - Point1).Magnitude + (point - Point2).Magnitude)) < 1e-15;
         public bool Contains(IEnumerable<Point> points) => points.All(point => Contains(point));
         public bool Contains(params Point[] points) => points.All(point => Contains(point));
 
