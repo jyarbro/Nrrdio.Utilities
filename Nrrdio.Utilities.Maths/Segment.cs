@@ -31,14 +31,14 @@ namespace Nrrdio.Utilities.Maths {
             Point intersection = null;
             Point intersectionEnd = null;
 
-            var offsetVector = Point1 - other.Point1;
+            var differenceVector1 = Point1 - other.Point1;
 
             var cross = Vector.Cross(other.Vector);
 
             // parallel
             if (cross == 0) {
-                // not collinear
-                if (Vector.Cross(offsetVector) != 0 || other.Vector.Cross(offsetVector) != 0) {
+                // not colinear
+                if (Vector.Cross(differenceVector1) != 0 || other.Vector.Cross(differenceVector1) != 0) {
                     intersects = false;
                 }
                 else {
@@ -66,11 +66,11 @@ namespace Nrrdio.Utilities.Maths {
 
                         // avoid divide by zero
                         if (other.Vector.X != 0) {
-                            overlapStart = offsetVector.X / other.Vector.X;
+                            overlapStart = differenceVector1.X / other.Vector.X;
                             overlapEnd = differenceVector2.X / other.Vector.X;
                         }
                         else if (other.Vector.Y != 0) {
-                            overlapStart = offsetVector.Y / other.Vector.Y;
+                            overlapStart = differenceVector1.Y / other.Vector.Y;
                             overlapEnd = differenceVector2.Y / other.Vector.Y;
                         }
 
@@ -103,7 +103,7 @@ namespace Nrrdio.Utilities.Maths {
                 }
             }
             else {
-                var intersectWithThis = other.Vector.Cross(offsetVector) / cross;
+                var intersectWithThis = other.Vector.Cross(differenceVector1) / cross;
 
                 // confirmed intersection
                 if (intersectWithThis >= 0 && intersectWithThis <= 1) {
