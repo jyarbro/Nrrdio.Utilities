@@ -13,6 +13,7 @@ namespace Nrrdio.Utilities.Maths {
         public double InterceptX => -InterceptY / Slope;
         public bool IsPoint => Point1 == Point2;
 
+        public Segment() { }
         public Segment(Point point1, Point point2) {
             Point1 = point1;
             Point2 = point2;
