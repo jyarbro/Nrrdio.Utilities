@@ -30,7 +30,7 @@ namespace Nrrdio.Utilities.Tests {
         [TestMethod]
         public void AreNotEqual() {
             var point1 = new Point(3, 4);
-            var point2 = new Point(3, 4.00000000000001);
+            var point2 = new Point(3, 4.00001);
             var point3 = new Point(4, 3);
 
             Assert.AreNotEqual(point1, point2);

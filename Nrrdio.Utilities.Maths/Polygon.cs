@@ -4,37 +4,33 @@ using System.Linq;
 
 namespace Nrrdio.Utilities.Maths {
     public class Polygon {
-        public IList<Point> Vertices => _Vertices;
-        protected readonly List<Point> _Vertices = new List<Point>();
+        public List<Point> Vertices { get; } = new List<Point>();
+        public IList<Segment> Edges { get; } = new List<Segment>();
 
-        public IList<Segment> Edges => _Edges;
-        protected readonly List<Segment> _Edges = new List<Segment>();
+        public Circle Circumcircle { get; protected init; }
+        public Point Centroid { get; protected init; }
+        public double Area { get; protected init; }
+        public double SignedArea { get; protected init; }
+        public EWinding Winding { get; protected init; }
+        public int VertexCount { get; protected init; }
 
-        public Circle Circumcircle {
-            get {
-                if (_Circumcircle is default(Circle)) {
-                    _Circumcircle = new Circle(Vertices, Centroid);
-                }
-
-                return _Circumcircle;
+        public Polygon() { }        
+        public Polygon(params Point[] vertices) : this(vertices.ToList()) { }
+        public Polygon(IEnumerable<Point> vertices) {
+            if (vertices is null || !vertices.Any()) {
+                throw new ArgumentException(nameof(vertices));
             }
-        }
-        Circle _Circumcircle;
 
-        public Point Centroid { get; private set; }
-        public double Area { get; private set; }
-        public double SignedArea { get; private set; }
-        public EWinding Winding { get; private set; }
-        public int VertexCount { get; protected set; }
+            Vertices.AddRange(vertices);
+            VertexCount = Vertices.Count;
 
-        public Polygon() { }
-        
-        public Polygon(params Point[] points) {
-            AddVertices(points);
-        }
+            CreateEdges();
 
-        public Polygon(IEnumerable<Point> points) {
-            AddVertices(points);
+            SignedArea = CalculateSignedArea();
+            Area = Math.Abs(SignedArea);
+            Centroid = CalculateCentroid();
+            Winding = CalculateWinding();
+            Circumcircle = new Circle(Vertices, Centroid);
         }
 
         public bool Contains(Point point) {
@@ -67,7 +63,7 @@ namespace Nrrdio.Utilities.Maths {
         public bool SharesEdgeWith(Polygon other) => 2 == Vertices.Where(other.Vertices.Contains).Count();
 
         public bool IsConvex() {
-            var totalEdges = _Edges.Count;
+            var totalEdges = Edges.Count;
             int j;
             var neg = false;
             var pos = false;
@@ -75,7 +71,7 @@ namespace Nrrdio.Utilities.Maths {
             for (var i = 0; i < totalEdges; i++) {
                 j = (i + 1) % totalEdges;
 
-                var cross = _Edges[i].Vector.Cross(_Edges[j].Vector);
+                var cross = Edges[i].Vector.Cross(Edges[j].Vector);
 
                 if (cross < 0) {
                     neg = true;
@@ -93,45 +89,29 @@ namespace Nrrdio.Utilities.Maths {
             return true;
         }
 
-        protected void AddVertices(IEnumerable<Point> points) {
-            if (points is null || !points.Any()) {
-                throw new ArgumentException(nameof(points));
-            }
-
-            _Vertices.AddRange(points);
-            VertexCount = _Vertices.Count;
-
-            int j;
-
+        protected void CreateEdges() {
             for (var i = 0; i < VertexCount; i++) {
-                j = (i + 1) % VertexCount;
-                _Edges.Add(new Segment(_Vertices[i], _Vertices[j]));
-                _Vertices[i].AdjacentPolygons.Add(this);
+                var j = (i + 1) % VertexCount;
+                Edges.Add(new Segment(Vertices[i], Vertices[j]));
+                Vertices[i].AdjacentPolygons.Add(this);
             }
-
-            CalculateValuesFromVertices();
-        }
-
-        protected void CalculateValuesFromVertices() {
-            CalculateArea();
-            CalculateCentroid();
-            CalculateWinding();
         }
 
         // https://en.wikipedia.org/wiki/Shoelace_formula
-        void CalculateArea() {
+        protected double CalculateSignedArea() {
             int j;
+            var signedArea = 0d;
 
             for (var i = 0; i < VertexCount; i++) {
                 j = (i + 1) % VertexCount;
-                SignedArea += _Vertices[i].Cross(_Vertices[j]) * 0.5;
+                signedArea += Vertices[i].Cross(Vertices[j]) * 0.5;
             }
 
-            Area = Math.Abs(SignedArea);
+            return signedArea;
         }
 
         // https://en.wikipedia.org/wiki/Centroid
-        void CalculateCentroid() {
+        protected Point CalculateCentroid() {
             int j;
             Point current;
             Point next;
@@ -142,8 +122,8 @@ namespace Nrrdio.Utilities.Maths {
             for (var i = 0; i < VertexCount; i++) {
                 j = (i + 1) % VertexCount;
 
-                current = _Vertices[i];
-                next = _Vertices[j];
+                current = Vertices[i];
+                next = Vertices[j];
                 cross = current.Cross(next);
 
                 x += (current.X + next.X) * cross;
@@ -153,20 +133,22 @@ namespace Nrrdio.Utilities.Maths {
             x /= 6 * SignedArea;
             y /= 6 * SignedArea;
 
-            Centroid = new Point(x, y);
+            return new Point(x, y);
         }
 
         // Direction of vectors based on signed area.
-        void CalculateWinding() {
-            Winding = EWinding.NONE;
+        protected EWinding CalculateWinding() {
+            var winding = EWinding.NONE;
 
             if (SignedArea < 0) {
-                Winding = EWinding.CLOCKWISE;
+                winding = EWinding.CLOCKWISE;
             }
 
             if (SignedArea > 0) {
-                Winding = EWinding.COUNTERCLOCKWISE;
+                winding = EWinding.COUNTERCLOCKWISE;
             }
+
+            return winding;
         }
 
         public override bool Equals(object obj) => (obj is Polygon other) && Equals(other);
@@ -180,10 +162,10 @@ namespace Nrrdio.Utilities.Maths {
 
             if (Winding != other.Winding) {
                 reversed = true;
-                _Vertices.Reverse();
+                Vertices.Reverse();
             }
 
-            var start = _Vertices.IndexOf(other._Vertices[0]);
+            var start = Vertices.IndexOf(other.Vertices[0]);
 
             if (start >= 0) {
                 areEqual = true;
@@ -191,7 +173,7 @@ namespace Nrrdio.Utilities.Maths {
                 for (var i = 0; i < other.VertexCount; i++) {
                     var j = (i + start) % other.VertexCount;
 
-                    if (other._Vertices[i] != _Vertices[j]) {
+                    if (other.Vertices[i] != Vertices[j]) {
                         areEqual = false;
                         break;
                     }
@@ -199,7 +181,7 @@ namespace Nrrdio.Utilities.Maths {
             }
 
             if (reversed) {
-                _Vertices.Reverse();
+                Vertices.Reverse();
             }
 
             return areEqual;
@@ -207,10 +189,10 @@ namespace Nrrdio.Utilities.Maths {
         public static bool Equals(Polygon left, Polygon right) => left.Equals(right);
 
         public override int GetHashCode() {
-            var hashCode = _Vertices[0].GetHashCode();
+            var hashCode = Vertices[0].GetHashCode();
 
             for (var i = 1; i < VertexCount; i++) {
-                hashCode ^= _Vertices[i].GetHashCode();
+                hashCode ^= Vertices[i].GetHashCode();
             }
 
             return hashCode;

@@ -6,8 +6,8 @@ namespace Nrrdio.Utilities.Maths {
     public class Point : IComparable<Point> {
         public IList<Polygon> AdjacentPolygons { get; } = new List<Polygon>();
 
-        public double X { get; set; }
-        public double Y { get; set; }
+        public double X { get; protected init; }
+        public double Y { get; protected init; }
 
         // https://en.wikipedia.org/wiki/Polar_coordinate_system
         public double PhiAngle => Math.Atan2(Y, X);

@@ -4,9 +4,10 @@ using System.Linq;
 
 namespace Nrrdio.Utilities.Maths {
     public class Segment {
-        public Point Vector { get; }
-        public Point Point1 { get; }
-        public Point Point2 { get; }
+        public Point Vector { get; protected init; }
+        public Point Point1 { get; protected init; }
+        public Point Point2 { get; protected init; }
+
         public double Slope => (Point2.Y - Point1.Y) / (Point2.X - Point1.X);
         public double InterceptY => Point1.Y - (Slope * Point1.X);
         public double InterceptX => -InterceptY / Slope;
