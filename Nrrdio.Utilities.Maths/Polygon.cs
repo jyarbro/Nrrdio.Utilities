@@ -15,7 +15,7 @@ namespace Nrrdio.Utilities.Maths {
         public int VertexCount { get; protected init; }
 
         public Polygon() { }        
-        public Polygon(params Point[] vertices) : this(vertices.ToList()) { }
+        public Polygon(params Point[] vertices) : this(vertices.AsEnumerable()) { }
         public Polygon(IEnumerable<Point> vertices) {
             if (vertices is null || !vertices.Any()) {
                 throw new ArgumentException(nameof(vertices));
