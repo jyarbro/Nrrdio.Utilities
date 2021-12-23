@@ -41,13 +41,23 @@ namespace Nrrdio.Utilities.Tests {
         }
 
         [TestMethod]
-        public void LeftOfLine() {
+        public void LeftOfPositiveLine() {
             var line = new Segment(new Point(2, 0), new Point(4, 10));
 
             Assert.IsTrue(new Point(0, 0).NearLine(line) > 0);
             Assert.IsFalse(new Point(3, 3).NearLine(line) > 0);
             Assert.IsTrue(new Point(1, 9).NearLine(line) > 0);
             Assert.IsTrue(new Point(0, 100).NearLine(line) > 0);
+        }
+
+        [TestMethod]
+        public void RightOfNegativeLine() {
+            var line = new Segment(new Point(4, 10), new Point(2, 0));
+
+            Assert.IsTrue(new Point(0, 0).NearLine(line) < 0);
+            Assert.IsFalse(new Point(3, 3).NearLine(line) < 0);
+            Assert.IsTrue(new Point(1, 9).NearLine(line) < 0);
+            Assert.IsTrue(new Point(0, 100).NearLine(line) < 0);
         }
 
         [TestMethod]
@@ -60,6 +70,15 @@ namespace Nrrdio.Utilities.Tests {
             Assert.IsTrue(new Point(100, 0).NearLine(line) < 0);
         }
 
+        [TestMethod]
+        public void LeftOfNegativeLine() {
+            var line = new Segment(new Point(4, 10), new Point(2, 0));
+
+            Assert.IsTrue(new Point(3, -4).NearLine(line) > 0);
+            Assert.IsFalse(new Point(2, 3).NearLine(line) > 0);
+            Assert.IsTrue(new Point(9, 3).NearLine(line) > 0);
+            Assert.IsTrue(new Point(100, 0).NearLine(line) > 0);
+        }
 
         [TestMethod]
         public void OnLine() {
