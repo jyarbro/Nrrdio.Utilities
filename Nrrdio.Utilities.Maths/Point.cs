@@ -4,8 +4,6 @@ using System.Linq;
 
 namespace Nrrdio.Utilities.Maths {
     public class Point : IComparable<Point> {
-        public IList<Polygon> AdjacentPolygons { get; } = new List<Polygon>();
-
         public double X { get; protected init; }
         public double Y { get; protected init; }
 

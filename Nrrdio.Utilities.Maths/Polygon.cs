@@ -93,7 +93,6 @@ namespace Nrrdio.Utilities.Maths {
             for (var i = 0; i < VertexCount; i++) {
                 var j = (i + 1) % VertexCount;
                 Edges.Add(new Segment(Vertices[i], Vertices[j]));
-                Vertices[i].AdjacentPolygons.Add(this);
             }
         }
 
