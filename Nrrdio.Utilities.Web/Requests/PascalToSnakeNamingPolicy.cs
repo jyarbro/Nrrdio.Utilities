@@ -1,12 +1,11 @@
 ﻿using Nrrdio.Utilities.Text;
-using System.Text.Json;
 
-namespace Nrrdio.Utilities.Web.Requests {
-    public class PascalToSnakeNamingPolicy : JsonNamingPolicy {
-        public override string ConvertName(string name) => name.PascalToSnake();
+namespace Nrrdio.Utilities.Web.Requests;
 
-        public static JsonSerializerOptions Options => new JsonSerializerOptions {
-            PropertyNamingPolicy = new PascalToSnakeNamingPolicy()
-        };
-    }
+public class PascalToSnakeNamingPolicy : JsonNamingPolicy {
+	public override string ConvertName(string name) => name.PascalToSnake();
+
+	public static JsonSerializerOptions Options => new JsonSerializerOptions {
+		PropertyNamingPolicy = new PascalToSnakeNamingPolicy()
+	};
 }

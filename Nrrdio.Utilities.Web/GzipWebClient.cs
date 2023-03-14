@@ -3,110 +3,107 @@ using Microsoft.Extensions.Options;
 using Nrrdio.Utilities.Web.Models.Errors;
 using Nrrdio.Utilities.Web.Models.Options;
 using Nrrdio.Utilities.Web.Requests;
-using System;
 using System.Net;
-using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace Nrrdio.Utilities.Web {
-    public class GzipWebClient : WebClient {
-        readonly GzipWebClientOptions Options;
+namespace Nrrdio.Utilities.Web;
 
-        public GzipWebClient(
-            IOptions<GzipWebClientOptions> options
-        ) {
-            Options = options.Value;
-        }
+public class GzipWebClient : WebClient {
+	readonly GzipWebClientOptions Options;
 
-        public async Task<HtmlDocument> DownloadDocument(string remoteUrl) {
-            var data = await DownloadStringSafe(remoteUrl);
+	public GzipWebClient(
+		IOptions<GzipWebClientOptions> options
+	) {
+		Options = options.Value;
+	}
 
-            HtmlDocument returnObject = null;
+	public async Task<HtmlDocument> DownloadDocument(string remoteUrl) {
+		var data = await DownloadStringSafe(remoteUrl);
 
-            if (!string.IsNullOrEmpty(data)) {
-                returnObject = new HtmlDocument();
-                returnObject.LoadHtml(data);
-            }
+		HtmlDocument returnObject = null;
 
-            return returnObject;
-        }
+		if (!string.IsNullOrEmpty(data)) {
+			returnObject = new HtmlDocument();
+			returnObject.LoadHtml(data);
+		}
 
-        public async Task<T> DownloadJSObject<T>(string remoteUrl, JsonSerializerOptions options = null) {
-            var data = await DownloadStringSafe(remoteUrl);
+		return returnObject;
+	}
 
-            var returnObject = default(T);
+	public async Task<T> DownloadJSObject<T>(string remoteUrl, JsonSerializerOptions options = null) {
+		var data = await DownloadStringSafe(remoteUrl);
 
-            if (data is { Length: >0 }) {
-                try {
-                    if (options is null) {
-                        returnObject = JsonSerializer.Deserialize<T>(data);
-                    }
-                    else {
-                        returnObject = JsonSerializer.Deserialize<T>(data, options);
-                    }
-                }
-                catch (JsonException) { }
-                catch (NotSupportedException) { }
-            }
+		var returnObject = default(T);
 
-            return returnObject;
-        }
+		if (data is { Length: > 0 }) {
+			try {
+				if (options is null) {
+					returnObject = JsonSerializer.Deserialize<T>(data);
+				}
+				else {
+					returnObject = JsonSerializer.Deserialize<T>(data, options);
+				}
+			}
+			catch (JsonException) { }
+			catch (NotSupportedException) { }
+		}
 
-        public async Task<string> DownloadStringSafe(string remoteUrl) {
-            remoteUrl = CleanUrl(remoteUrl);
+		return returnObject;
+	}
 
-            var data = string.Empty;
+	public async Task<string> DownloadStringSafe(string remoteUrl) {
+		remoteUrl = CleanUrl(remoteUrl);
 
-            try {
-                data = await DownloadStringTaskAsync(remoteUrl);
-            }
-            catch (WebException e) when (e.Status == WebExceptionStatus.Timeout) { 
-                throw new HttpTimeoutError();
-            }
-            catch (UriFormatException) { }
-            catch (AggregateException) { }
+		var data = string.Empty;
 
-            return data;
-        }
+		try {
+			data = await DownloadStringTaskAsync(remoteUrl);
+		}
+		catch (WebException e) when (e.Status == WebExceptionStatus.Timeout) {
+			throw new HttpTimeoutError();
+		}
+		catch (UriFormatException) { }
+		catch (AggregateException) { }
 
-        public async Task<string> UploadJSObject(string url, string method, object data) {
-            if (method is not { Length: >0 }) {
-                throw new ArgumentException();
-            }
+		return data;
+	}
 
-            var remoteUrl = CleanUrl(url);
-            var remoteUri = new Uri(remoteUrl);
+	public async Task<string> UploadJSObject(string url, string method, object data) {
+		if (method is not { Length: > 0 }) {
+			throw new ArgumentException();
+		}
 
-            JsonSerializerOptions options = new JsonSerializerOptions { PropertyNamingPolicy = new PascalToSnakeNamingPolicy() };
+		var remoteUrl = CleanUrl(url);
+		var remoteUri = new Uri(remoteUrl);
 
-            Headers[HttpRequestHeader.ContentType] = "application/json";
+		JsonSerializerOptions options = new JsonSerializerOptions { PropertyNamingPolicy = new PascalToSnakeNamingPolicy() };
 
-            var serialized = JsonSerializer.Serialize(data, options);
+		Headers[HttpRequestHeader.ContentType] = "application/json";
 
-            return await Task.Run(() => UploadString(remoteUri, method, serialized));
-        }
+		var serialized = JsonSerializer.Serialize(data, options);
 
-        protected override WebRequest GetWebRequest(Uri remoteUri) {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault | SecurityProtocolType.Tls13;
+		return await Task.Run(() => UploadString(remoteUri, method, serialized));
+	}
 
-            var request = base.GetWebRequest(remoteUri) as HttpWebRequest;
+	protected override WebRequest GetWebRequest(Uri remoteUri) {
+		ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault | SecurityProtocolType.Tls13;
 
-            request.UserAgent = Options.UserAgent;
-            request.AllowAutoRedirect = true;
-            request.MaximumAutomaticRedirections = 3;
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-            request.Timeout = Options.Timeout > 0 ? Options.Timeout : 5000;
-            request.CookieContainer = new CookieContainer();
+		var request = base.GetWebRequest(remoteUri) as HttpWebRequest;
 
-            return request;
-        }
+		request.UserAgent = Options.UserAgent;
+		request.AllowAutoRedirect = true;
+		request.MaximumAutomaticRedirections = 3;
+		request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+		request.Timeout = Options.Timeout > 0 ? Options.Timeout : 5000;
+		request.CookieContainer = new CookieContainer();
 
-        string CleanUrl(string remoteUrl) {
-            if (remoteUrl is not { Length: > 0 }) {
-                throw new ArgumentException($"Argument {nameof(remoteUrl)} cannot be empty or null.");
-            }
+		return request;
+	}
 
-            return remoteUrl.Split('#')[0];
-        }
-    }
+	string CleanUrl(string remoteUrl) {
+		if (remoteUrl is not { Length: > 0 }) {
+			throw new ArgumentException($"Argument {nameof(remoteUrl)} cannot be empty or null.");
+		}
+
+		return remoteUrl.Split('#')[0];
+	}
 }

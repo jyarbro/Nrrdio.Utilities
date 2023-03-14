@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +15,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Nrrdio.Utilities\Nrrdio.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Text.Json" />
+    <Using Include="System.Web" />
   </ItemGroup>
 
 </Project>
