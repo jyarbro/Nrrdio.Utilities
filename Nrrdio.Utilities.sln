@@ -9,17 +9,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nrrdio.Utilities.Web", "Nrr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nrrdio.Utilities.TestConsole", "Nrrdio.Utilities.TestConsole\Nrrdio.Utilities.TestConsole.csproj", "{CC8D4BAF-4C23-4EA0-8B06-0F3D2BA33009}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git Configuration", "Git Configuration", "{50141A8B-7202-4F0B-AAB3-68EC0596A358}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{50141A8B-7202-4F0B-AAB3-68EC0596A358}"
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		UNLICENSE = UNLICENSE
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nrrdio.Utilities.Tests", "Nrrdio.Utilities.Tests\Nrrdio.Utilities.Tests.csproj", "{4D617EC4-EF54-485F-88AF-DDDF218638BA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nrrdio.Utilities.Maths", "Nrrdio.Utilities.Maths\Nrrdio.Utilities.Maths.csproj", "{B06BC095-152D-482B-B9E5-C5388ACE37DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nrrdio.Utilities.WinUI", "Nrrdio.Utilities.WinUI\Nrrdio.Utilities.WinUI.csproj", "{61C922D7-9A76-4DCD-BFC6-C408272F93F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nrrdio.Utilities.WinUI", "Nrrdio.Utilities.WinUI\Nrrdio.Utilities.WinUI.csproj", "{61C922D7-9A76-4DCD-BFC6-C408272F93F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
