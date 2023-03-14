@@ -9,6 +9,7 @@
         <Authors>Jim Yarbro</Authors>
         <Company>nrrd.io</Company>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
     
 </Project>
