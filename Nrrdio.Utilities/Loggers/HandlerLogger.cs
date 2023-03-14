@@ -1,53 +1,49 @@
-﻿using Microsoft.Extensions.Logging;
-using Nrrdio.Utilities.Loggers.Contracts;
-using System;
-using System.Collections.Concurrent;
-using System.Text.Json;
+﻿using Nrrdio.Utilities.Loggers.Contracts;
 
-namespace Nrrdio.Utilities.Loggers {
-    /// <summary>
-    /// Returns log event to a registered handler. Useful when the handler is GUI based.
-    /// </summary>
-    public class HandlerLogger : IHandlerLogger {
-        public event EventHandler<LogEntryEventArgs> EntryAddedEvent;
+namespace Nrrdio.Utilities.Loggers;
 
-        public string Name { private get; init; }
-        public LogLevel LogLevel { get; init; } = LogLevel.Information;
+/// <summary>
+/// Returns log event to a registered handler. Useful when the handler is GUI based.
+/// </summary>
+public class HandlerLogger : IHandlerLogger {
+	public event EventHandler<LogEntryEventArgs> EntryAddedEvent;
 
-        public IDisposable BeginScope<TState>(TState state) => default;
+	public string Name { private get; init; }
+	public LogLevel LogLevel { get; init; } = LogLevel.Information;
 
-        public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel;
+	public IDisposable BeginScope<TState>(TState state) => default;
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter) {
-            var args = new LogEntryEventArgs {
-                LogEntry = new LogEntry {
-                    EventId = eventId.Id,
-                    LogLevel = logLevel,
-                    Name = Name,
-                    Message = formatter(state, exception),
-                    Time = DateTime.Now,
-                    SerializedException = exception is not null ? JsonSerializer.Serialize(exception) : string.Empty
-                }
-            };
+	public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel;
 
-            EntryAddedEvent?.Invoke(this, args);
-        }
-    }
+	public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter) {
+		var args = new LogEntryEventArgs {
+			LogEntry = new LogEntry {
+				EventId = eventId.Id,
+				LogLevel = logLevel,
+				Name = Name,
+				Message = formatter(state, exception),
+				Time = DateTime.Now,
+				SerializedException = exception is not null ? JsonSerializer.Serialize(exception) : string.Empty
+			}
+		};
 
-    public sealed class HandlerLoggerProvider : ILoggerProvider {
-        public static ConcurrentDictionary<string, HandlerLogger> Instances { get; }
+		EntryAddedEvent?.Invoke(this, args);
+	}
+}
 
-        public LogLevel LogLevel { get; init; }
+public sealed class HandlerLoggerProvider : ILoggerProvider {
+	public static ConcurrentDictionary<string, HandlerLogger> Instances { get; }
 
-        static HandlerLoggerProvider() {
-            Instances = new ConcurrentDictionary<string, HandlerLogger>();
-        }
+	public LogLevel LogLevel { get; init; }
 
-        public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new HandlerLogger {
-            Name = name,
-            LogLevel = LogLevel
-        });
+	static HandlerLoggerProvider() {
+		Instances = new ConcurrentDictionary<string, HandlerLogger>();
+	}
 
-        public void Dispose() => Instances.Clear();
-    }
+	public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new HandlerLogger {
+		Name = name,
+		LogLevel = LogLevel
+	});
+
+	public void Dispose() => Instances.Clear();
 }

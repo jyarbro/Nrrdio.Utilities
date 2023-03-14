@@ -1,11 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿namespace Nrrdio.Utilities.Loggers.Contracts;
 
-namespace Nrrdio.Utilities.Loggers.Contracts {
-    public interface IHandlerLogger : ILogger {
-        event EventHandler<LogEntryEventArgs> EntryAddedEvent;
+public interface IHandlerLogger : ILogger {
+	event EventHandler<LogEntryEventArgs> EntryAddedEvent;
 
-        string Name { init; }
-        LogLevel LogLevel { get; init; }
-    }
+	string Name { init; }
+	LogLevel LogLevel { get; init; }
 }

@@ -1,169 +1,161 @@
-﻿using Microsoft.Extensions.Logging;
-using Nrrdio.Utilities.Loggers.Contracts;
-using System;
-using System.Collections.Concurrent;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Nrrdio.Utilities.Loggers.Contracts;
 
-namespace Nrrdio.Utilities.Loggers {
-    /// <summary>
-    /// Logs to a json file.
-    /// </summary>
-    public class JsonFileLogger : IAsyncLogger, IDisposable {
-        public string Name { private get; init; }
+namespace Nrrdio.Utilities.Loggers;
 
-        public IAsyncLoggerConfig GenericConfig {
-            get => Config;
-            init => Config = value as Configuration;
-        }
-        Configuration Config { get; init; }
+/// <summary>
+/// Logs to a json file.
+/// </summary>
+public class JsonFileLogger : IAsyncLogger, IDisposable {
+	public string Name { private get; init; }
 
-        public CancellationToken CancellationToken { private get; init; }
+	public IAsyncLoggerConfig GenericConfig {
+		get => Config;
+		init => Config = value as Configuration;
+	}
+	Configuration Config { get; init; }
 
-        ConcurrentQueue<LogEntry> WriteableQueue { get; } = new ConcurrentQueue<LogEntry>();
+	public CancellationToken CancellationToken { private get; init; }
 
-        string FilePath {
-            get {
-                if (string.IsNullOrEmpty(_FilePath)) {
-                    _FilePath = $"{Config.FolderPath}\\{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log";
-                }
+	ConcurrentQueue<LogEntry> WriteableQueue { get; } = new ConcurrentQueue<LogEntry>();
 
-                return _FilePath;
-            }
-        }
-        string _FilePath;
+	string FilePath {
+		get {
+			if (string.IsNullOrEmpty(_FilePath)) {
+				_FilePath = $"{Config.FolderPath}\\{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log";
+			}
 
-        bool disposed;
-        int counter;
+			return _FilePath;
+		}
+	}
+	string _FilePath;
 
-        public JsonFileLogger() {
-            MonitorQueue();
-        }
+	bool disposed;
+	int counter;
 
-        public IDisposable BeginScope<TState>(TState state) => default;
+	public JsonFileLogger() {
+		MonitorQueue();
+	}
 
-        public bool IsEnabled(LogLevel logLevel) => logLevel == Config.LogLevel;
+	public IDisposable BeginScope<TState>(TState state) => default;
 
-        public void Log<TState>(
-            LogLevel logLevel,
-            EventId eventId,
-            TState state,
-            Exception exception,
-            Func<TState, Exception, string> formatter) {
+	public bool IsEnabled(LogLevel logLevel) => logLevel == Config.LogLevel;
 
-            if (logLevel >= Config.LogLevel) {
-                WriteableQueue.Enqueue(new LogEntry {
-                    EventId = eventId.Id,
-                    LogLevel = logLevel,
-                    Name = Name,
-                    Message = formatter(state, exception),
-                    Time = DateTime.Now,
-                    SerializedException = exception is not null ? JsonSerializer.Serialize(exception) : string.Empty
-                });
-            }
-        }
+	public void Log<TState>(
+		LogLevel logLevel,
+		EventId eventId,
+		TState state,
+		Exception exception,
+		Func<TState, Exception, string> formatter) {
 
-        void PreparePath() {
-            if (Config.RetainFileCount < 1) {
-                throw new ArgumentException($"{nameof(Config.RetainFileCount)} must be greater than 0");
-            }
+		if (logLevel >= Config.LogLevel) {
+			WriteableQueue.Enqueue(new LogEntry {
+				EventId = eventId.Id,
+				LogLevel = logLevel,
+				Name = Name,
+				Message = formatter(state, exception),
+				Time = DateTime.Now,
+				SerializedException = exception is not null ? JsonSerializer.Serialize(exception) : string.Empty
+			});
+		}
+	}
 
-            if (string.IsNullOrEmpty(Config.FolderPath)) {
-                throw new ArgumentException($"{nameof(Config.FolderPath)} must contain a value");
-            }
+	void PreparePath() {
+		if (Config.RetainFileCount < 1) {
+			throw new ArgumentException($"{nameof(Config.RetainFileCount)} must be greater than 0");
+		}
 
-            var directoryInfo = Directory.CreateDirectory(Config.FolderPath);
-            directoryInfo.Attributes = FileAttributes.Normal;
+		if (string.IsNullOrEmpty(Config.FolderPath)) {
+			throw new ArgumentException($"{nameof(Config.FolderPath)} must contain a value");
+		}
 
-            var files = directoryInfo
-                .GetFiles("*.log", SearchOption.TopDirectoryOnly)
-                .OrderBy(o => o.CreationTime)
-                .ToList();
+		var directoryInfo = Directory.CreateDirectory(Config.FolderPath);
+		directoryInfo.Attributes = FileAttributes.Normal;
 
-            while (files.Count >= Config.RetainFileCount) {
-                var fileInfo = files.First();
-                File.SetAttributes(fileInfo.FullName, FileAttributes.Normal);
-                File.Delete(fileInfo.FullName);
-                files.Remove(fileInfo);
-            }
-        }
+		var files = directoryInfo
+			.GetFiles("*.log", SearchOption.TopDirectoryOnly)
+			.OrderBy(o => o.CreationTime)
+			.ToList();
 
-        /// <summary>
-        /// Continuously monitors the queue for work.
-        /// </summary>
-        /// <param name="Text"></param>
-        void MonitorQueue() {
-            Task.Run(() => {
-                PreparePath();
-                
-                while (!CancellationToken.IsCancellationRequested && !disposed) {
-                    while (WriteableQueue.TryDequeue(out var logEntry)) {
-                        // Check file size every 100 entries.
-                        if (counter++ % 100 == 0) {
-                            var fileInfo = new FileInfo(FilePath);
+		while (files.Count >= Config.RetainFileCount) {
+			var fileInfo = files.First();
+			File.SetAttributes(fileInfo.FullName, FileAttributes.Normal);
+			File.Delete(fileInfo.FullName);
+			files.Remove(fileInfo);
+		}
+	}
 
-                            // If limit is reached, reset file path.
-                            if (fileInfo.Exists && fileInfo.Length > (1024 * 1024 * Config.MaxFileSize)) {
-                                _FilePath = "";
-                                PreparePath();
-                            }
-                        }
+	/// <summary>
+	/// Continuously monitors the queue for work.
+	/// </summary>
+	/// <param name="Text"></param>
+	void MonitorQueue() {
+		Task.Run(() => {
+			PreparePath();
 
-                        JsonFiles.Write(FilePath, logEntry, true);
-                    }
+			while (!CancellationToken.IsCancellationRequested && !disposed) {
+				while (WriteableQueue.TryDequeue(out var logEntry)) {
+					// Check file size every 100 entries.
+					if (counter++ % 100 == 0) {
+						var fileInfo = new FileInfo(FilePath);
 
-                    Thread.Sleep(100);
-                }
-            });
-        }
+						// If limit is reached, reset file path.
+						if (fileInfo.Exists && fileInfo.Length > (1024 * 1024 * Config.MaxFileSize)) {
+							_FilePath = "";
+							PreparePath();
+						}
+					}
 
-        public void Dispose() => Dispose(true);
-        ~JsonFileLogger() => Dispose(false);
+					JsonFiles.Write(FilePath, logEntry, true);
+				}
 
-        void Dispose(bool disposing) {
-            if (!disposed) {
-                var disposedTime = DateTime.Now;
+				Thread.Sleep(100);
+			}
+		});
+	}
 
-                // Block thread until queue is empty or until time has passed.
-                while (!WriteableQueue.IsEmpty && DateTime.Now < disposedTime.AddMilliseconds(500)) {
-                    Thread.Sleep(50);
-                }
+	public void Dispose() => Dispose(true);
+	~JsonFileLogger() => Dispose(false);
 
-                disposed = true;
-            }
-        }
+	void Dispose(bool disposing) {
+		if (!disposed) {
+			var disposedTime = DateTime.Now;
 
-        public record Configuration : IAsyncLoggerConfig {
-            public LogLevel LogLevel { get; init; } = LogLevel.Information;
-            public string FolderPath { get; init; }
-            public int RetainFileCount { get; init; } = 5;
-            public int MaxFileSize { get; init; } = 100;
-        }
-    }
+			// Block thread until queue is empty or until time has passed.
+			while (!WriteableQueue.IsEmpty && DateTime.Now < disposedTime.AddMilliseconds(500)) {
+				Thread.Sleep(50);
+			}
 
-    public sealed class JsonFileLoggerProvider : ILoggerProvider {
-        static ConcurrentDictionary<string, JsonFileLogger> Instances => new();
+			disposed = true;
+		}
+	}
 
-        public JsonFileLogger.Configuration Config { private get; init; }
-        public CancellationTokenSource CancellationTokenSource { private get; init; } = new();
+	public record Configuration : IAsyncLoggerConfig {
+		public LogLevel LogLevel { get; init; } = LogLevel.Information;
+		public string FolderPath { get; init; }
+		public int RetainFileCount { get; init; } = 5;
+		public int MaxFileSize { get; init; } = 100;
+	}
+}
 
-        public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new JsonFileLogger {
-            Name = name,
-            GenericConfig = Config,
-            CancellationToken = CancellationTokenSource.Token
-        });
+public sealed class JsonFileLoggerProvider : ILoggerProvider {
+	static ConcurrentDictionary<string, JsonFileLogger> Instances => new();
 
-        public void Dispose() {
-            CancellationTokenSource.Cancel();
+	public JsonFileLogger.Configuration Config { private get; init; }
+	public CancellationTokenSource CancellationTokenSource { private get; init; } = new();
 
-            foreach (var instance in Instances) {
-                instance.Value.Dispose();
-            }
+	public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new JsonFileLogger {
+		Name = name,
+		GenericConfig = Config,
+		CancellationToken = CancellationTokenSource.Token
+	});
 
-            Instances.Clear();
-        }
-    }
+	public void Dispose() {
+		CancellationTokenSource.Cancel();
+
+		foreach (var instance in Instances) {
+			instance.Value.Dispose();
+		}
+
+		Instances.Clear();
+	}
 }

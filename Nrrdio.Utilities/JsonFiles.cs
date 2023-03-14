@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
-
-namespace Nrrdio.Utilities {
-    public static class JsonFiles {
+﻿namespace Nrrdio.Utilities;
+public static class JsonFiles {
         /// <summary>
         /// Writes the given object instance to a Json file.
         /// <para>Only Public properties and variables will be written to the file. These can be any type though, even other classes.</para>
@@ -86,4 +81,3 @@ namespace Nrrdio.Utilities {
             reader.Close();
         }
     }
-}
