@@ -1,71 +1,69 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nrrdio.Utilities.Maths;
-using System.Linq;
+﻿using Nrrdio.Utilities.Maths;
 
-namespace Nrrdio.Utilities.Tests {
-    [TestClass]
-    public class Hexagons {
-        [TestMethod]
-        public void One() {
-            var hexagon = new Hexagon(new Point(0, 0), 1, 1);
-            Assert.AreEqual(6, hexagon.Vertices.Count());
-        }
+namespace Nrrdio.Utilities.Tests;
 
-        [TestMethod]
-        public void Two() {
-            var hexagon = new Hexagon(new Point(0, 0), 2, 1);
-            Assert.AreEqual(12, hexagon.Vertices.Count());
-        }
+[TestClass]
+public class Hexagons {
+	[TestMethod]
+	public void One() {
+		var hexagon = new Hexagon(new Point(0, 0), 1, 1);
+		Assert.AreEqual(6, hexagon.Vertices.Count());
+	}
 
-        [TestMethod]
-        public void Three() {
-            var hexagon = new Hexagon(new Point(0, 0), 3, 1);
+	[TestMethod]
+	public void Two() {
+		var hexagon = new Hexagon(new Point(0, 0), 2, 1);
+		Assert.AreEqual(12, hexagon.Vertices.Count());
+	}
 
-            Assert.AreEqual(18, hexagon.Vertices.Count());
-        }
+	[TestMethod]
+	public void Three() {
+		var hexagon = new Hexagon(new Point(0, 0), 3, 1);
 
-        [TestMethod]
-        public void Four() {
-            var hexagon = new Hexagon(new Point(0, 0), 4, 1);
+		Assert.AreEqual(18, hexagon.Vertices.Count());
+	}
 
-            Assert.AreEqual(24, hexagon.Vertices.Count());
-        }
+	[TestMethod]
+	public void Four() {
+		var hexagon = new Hexagon(new Point(0, 0), 4, 1);
 
-        [TestMethod]
-        public void SixVertices() {
-            var hexagon = new Hexagon(new Point(0, 0), 6, 1);
+		Assert.AreEqual(24, hexagon.Vertices.Count());
+	}
 
-            var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).Magnitude == hexagon.Radius);
+	[TestMethod]
+	public void SixVertices() {
+		var hexagon = new Hexagon(new Point(0, 0), 6, 1);
 
-            Assert.AreEqual(6, vertices.Count());
-        }
+		var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).Magnitude == hexagon.Radius);
 
-        [TestMethod]
-        public void SixApothems() {
-            var hexagon = new Hexagon(new Point(0, 0), 6, 1);
+		Assert.AreEqual(6, vertices.Count());
+	}
 
-            var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).Magnitude == hexagon.Apothem);
+	[TestMethod]
+	public void SixApothems() {
+		var hexagon = new Hexagon(new Point(0, 0), 6, 1);
 
-            Assert.AreEqual(6, vertices.Count());
-        }
+		var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).Magnitude == hexagon.Apothem);
 
-        [TestMethod]
-        public void Apothems() {
-            var hexagon = new Hexagon(new Point(0, 0), 2, 1);
+		Assert.AreEqual(6, vertices.Count());
+	}
 
-            var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).Magnitude != hexagon.Radius).ToList();
+	[TestMethod]
+	public void Apothems() {
+		var hexagon = new Hexagon(new Point(0, 0), 2, 1);
 
-            for (var i = 0; i < vertices.Count; i++) {
-                var current = (hexagon.Centroid - vertices[i]).Magnitude;
-                Assert.AreEqual($"{1.7320508075688772f:#############}", $"{current:#############}");
-            }
-        }
+		var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).Magnitude != hexagon.Radius).ToList();
 
-        [TestMethod]
-        public void Edges() {
-            var hexagon = new Hexagon(new Point(0, 0), 2, 1);
+		for (var i = 0; i < vertices.Count; i++) {
+			var current = (hexagon.Centroid - vertices[i]).Magnitude;
+			Assert.AreEqual($"{1.7320508075688772f:#############}", $"{current:#############}");
+		}
+	}
 
-            Assert.AreEqual(12, hexagon.Edges.Count());
-        }
-    }
+	[TestMethod]
+	public void Edges() {
+		var hexagon = new Hexagon(new Point(0, 0), 2, 1);
+
+		Assert.AreEqual(12, hexagon.Edges.Count());
+	}
 }

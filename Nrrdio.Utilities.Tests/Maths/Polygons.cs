@@ -1,202 +1,200 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nrrdio.Utilities.Maths;
-using System.Collections.Generic;
+﻿using Nrrdio.Utilities.Maths;
 
-namespace Nrrdio.Utilities.Tests {
-    [TestClass]
-    public class Polygons {
-        [TestMethod]
-        public void Winding() {
-            var points = new List<Point> {
-                new Point(2, 0),
-                new Point(4, 4),
-                new Point(6, 3),
-                new Point(4, -1),
-            };
+namespace Nrrdio.Utilities.Tests;
 
-            var polygon = new Polygon(points);
+[TestClass]
+public class Polygons {
+	[TestMethod]
+	public void Winding() {
+		var points = new List<Point> {
+				new Point(2, 0),
+				new Point(4, 4),
+				new Point(6, 3),
+				new Point(4, -1),
+			};
 
-            Assert.AreEqual(Polygon.EWinding.CLOCKWISE, polygon.Winding);
-        }
+		var polygon = new Polygon(points);
 
-        [TestMethod]
-        public void Area() {
-            var polygon = new Polygon(new List<Point> {
-                new Point(2, 0),
-                new Point(2, 4),
-                new Point(4, 4),
-                new Point(4, 0),
-            });
+		Assert.AreEqual(Polygon.EWinding.CLOCKWISE, polygon.Winding);
+	}
 
-            Assert.AreEqual(8, polygon.Area);
+	[TestMethod]
+	public void Area() {
+		var polygon = new Polygon(new List<Point> {
+				new Point(2, 0),
+				new Point(2, 4),
+				new Point(4, 4),
+				new Point(4, 0),
+			});
 
-            polygon = new Polygon(new List<Point> {
-                new Point(2, 0),
-                new Point(4, 4),
-                new Point(6, 3),
-                new Point(4, -1),
-            });
+		Assert.AreEqual(8, polygon.Area);
 
-            Assert.AreEqual(10, polygon.Area);
-        }
+		polygon = new Polygon(new List<Point> {
+				new Point(2, 0),
+				new Point(4, 4),
+				new Point(6, 3),
+				new Point(4, -1),
+			});
 
-        [TestMethod]
-        public void Centroid() {
-            var polygon = new Polygon(new List<Point> {
-                new Point(2, 0),
-                new Point(2, 4),
-                new Point(4, 4),
-                new Point(4, 0),
-            });
+		Assert.AreEqual(10, polygon.Area);
+	}
 
-            Assert.AreEqual(new Point(3, 2), polygon.Centroid);
+	[TestMethod]
+	public void Centroid() {
+		var polygon = new Polygon(new List<Point> {
+				new Point(2, 0),
+				new Point(2, 4),
+				new Point(4, 4),
+				new Point(4, 0),
+			});
 
-            polygon = new Polygon(new List<Point> {
-                new Point(2, 0),
-                new Point(4, 4),
-                new Point(6, 3),
-                new Point(4, -1),
-            });
+		Assert.AreEqual(new Point(3, 2), polygon.Centroid);
 
-            Assert.AreEqual(new Point(4, 1.5), polygon.Centroid);
+		polygon = new Polygon(new List<Point> {
+				new Point(2, 0),
+				new Point(4, 4),
+				new Point(6, 3),
+				new Point(4, -1),
+			});
 
-            polygon = new Polygon(new List<Point> {
-                new Point(2, 0),
-                new Point(2, 4),
-                new Point(4, 4),
-                new Point(4, 3),
-                new Point(5, 3),
-                new Point(5, 1),
-                new Point(4, 1),
-                new Point(4, 0),
-            });
+		Assert.AreEqual(new Point(4, 1.5), polygon.Centroid);
 
-            Assert.AreEqual(new Point(3.3, 2), polygon.Centroid);
-        }
+		polygon = new Polygon(new List<Point> {
+				new Point(2, 0),
+				new Point(2, 4),
+				new Point(4, 4),
+				new Point(4, 3),
+				new Point(5, 3),
+				new Point(5, 1),
+				new Point(4, 1),
+				new Point(4, 0),
+			});
 
-        [TestMethod]
-        public void CentroidReversed() {
-            var points = new List<Point> {
-                new Point(4, 4),
-                new Point(2, 4),
-                new Point(2, 0),
-                new Point(4, 0),
-                new Point(4, 1),
-                new Point(5, 1),
-                new Point(5, 3),
-                new Point(4, 3),
-            };
+		Assert.AreEqual(new Point(3.3, 2), polygon.Centroid);
+	}
 
-            var polygon = new Polygon(points);
+	[TestMethod]
+	public void CentroidReversed() {
+		var points = new List<Point> {
+				new Point(4, 4),
+				new Point(2, 4),
+				new Point(2, 0),
+				new Point(4, 0),
+				new Point(4, 1),
+				new Point(5, 1),
+				new Point(5, 3),
+				new Point(4, 3),
+			};
 
-            Assert.AreEqual(new Point(3.3, 2), polygon.Centroid);
-        }
+		var polygon = new Polygon(points);
 
-        [TestMethod]
-        public void ContainsOne() {
-            var points = new List<Point> {
-                new Point(4, 4),
-                new Point(2, 4),
-                new Point(2, 0),
-                new Point(4, 0),
-                new Point(4, 1),
-                new Point(5, 1),
-                new Point(5, 3),
-            };
+		Assert.AreEqual(new Point(3.3, 2), polygon.Centroid);
+	}
 
-            var polygon = new Polygon(points);
+	[TestMethod]
+	public void ContainsOne() {
+		var points = new List<Point> {
+				new Point(4, 4),
+				new Point(2, 4),
+				new Point(2, 0),
+				new Point(4, 0),
+				new Point(4, 1),
+				new Point(5, 1),
+				new Point(5, 3),
+			};
 
-            var testPoint = new Point(2.05, .0005);
-            Assert.IsTrue(polygon.Contains(testPoint));
+		var polygon = new Polygon(points);
 
-            testPoint = new Point(4.5, 2.9999999);
-            Assert.IsTrue(polygon.Contains(testPoint));
+		var testPoint = new Point(2.05, .0005);
+		Assert.IsTrue(polygon.Contains(testPoint));
 
-            testPoint = new Point(4.5, 3.51);
-            Assert.IsFalse(polygon.Contains(testPoint));
+		testPoint = new Point(4.5, 2.9999999);
+		Assert.IsTrue(polygon.Contains(testPoint));
 
-            testPoint = new Point(5, 3.1);
-            Assert.IsFalse(polygon.Contains(testPoint));
+		testPoint = new Point(4.5, 3.51);
+		Assert.IsFalse(polygon.Contains(testPoint));
 
-            testPoint = new Point(4.1, 4);
-            Assert.IsFalse(polygon.Contains(testPoint));
-        }
+		testPoint = new Point(5, 3.1);
+		Assert.IsFalse(polygon.Contains(testPoint));
 
-        [TestMethod]
-        public void ContainsMany() {
-            var points = new List<Point> {
-                new Point(4, 4),
-                new Point(2, 4),
-                new Point(2, 0),
-                new Point(4, 0),
-                new Point(4, 1),
-                new Point(5, 1),
-                new Point(5, 3),
-            };
+		testPoint = new Point(4.1, 4);
+		Assert.IsFalse(polygon.Contains(testPoint));
+	}
 
-            var polygon = new Polygon(points);
+	[TestMethod]
+	public void ContainsMany() {
+		var points = new List<Point> {
+				new Point(4, 4),
+				new Point(2, 4),
+				new Point(2, 0),
+				new Point(4, 0),
+				new Point(4, 1),
+				new Point(5, 1),
+				new Point(5, 3),
+			};
 
-            var testPoints = new List<Point> {
-                new Point(3, 1),
-                new Point(4, 2)
-            };
+		var polygon = new Polygon(points);
 
-            Assert.IsTrue(polygon.Contains(testPoints));
+		var testPoints = new List<Point> {
+				new Point(3, 1),
+				new Point(4, 2)
+			};
 
-            testPoints.Add(new Point(4.5, 3.5001));
+		Assert.IsTrue(polygon.Contains(testPoints));
 
-            Assert.IsFalse(polygon.Contains(testPoints));
-        }
+		testPoints.Add(new Point(4.5, 3.5001));
 
-        [TestMethod]
-        public void ContainsEdges() {
-            var polygon = new Polygon(new List<Point> {
-                new Point(4, 4),
-                new Point(2, 4),
-                new Point(2, 0),
-                new Point(4, 0),
-                new Point(4, 1),
-                new Point(5, 1),
-                new Point(5, 3),
-            });
+		Assert.IsFalse(polygon.Contains(testPoints));
+	}
 
-            var reversePolygon = new Polygon(new List<Point> {
-                new Point(5, 3),
-                new Point(5, 1),
-                new Point(4, 1),
-                new Point(4, 0),
-                new Point(2, 0),
-                new Point(2, 4),
-                new Point(4, 4),
-            });
+	[TestMethod]
+	public void ContainsEdges() {
+		var polygon = new Polygon(new List<Point> {
+				new Point(4, 4),
+				new Point(2, 4),
+				new Point(2, 0),
+				new Point(4, 0),
+				new Point(4, 1),
+				new Point(5, 1),
+				new Point(5, 3),
+			});
 
-            var testPoint = new Point(4.5, 3.5);
-            Assert.IsTrue(polygon.Contains(testPoint));
-            Assert.IsTrue(reversePolygon.Contains(testPoint));
+		var reversePolygon = new Polygon(new List<Point> {
+				new Point(5, 3),
+				new Point(5, 1),
+				new Point(4, 1),
+				new Point(4, 0),
+				new Point(2, 0),
+				new Point(2, 4),
+				new Point(4, 4),
+			});
 
-            testPoint = new Point(3, 0);
-            Assert.IsTrue(polygon.Contains(testPoint));
-            Assert.IsTrue(reversePolygon.Contains(testPoint));
+		var testPoint = new Point(4.5, 3.5);
+		Assert.IsTrue(polygon.Contains(testPoint));
+		Assert.IsTrue(reversePolygon.Contains(testPoint));
 
-            testPoint = new Point(4, 1);
-            Assert.IsTrue(polygon.Contains(testPoint));
-            Assert.IsTrue(reversePolygon.Contains(testPoint));
+		testPoint = new Point(3, 0);
+		Assert.IsTrue(polygon.Contains(testPoint));
+		Assert.IsTrue(reversePolygon.Contains(testPoint));
 
-            testPoint = new Point(5, 2);
-            Assert.IsTrue(polygon.Contains(testPoint));
-            Assert.IsTrue(reversePolygon.Contains(testPoint));
+		testPoint = new Point(4, 1);
+		Assert.IsTrue(polygon.Contains(testPoint));
+		Assert.IsTrue(reversePolygon.Contains(testPoint));
 
-            testPoint = new Point(2, 2);
-            Assert.IsTrue(polygon.Contains(testPoint));
-            Assert.IsTrue(reversePolygon.Contains(testPoint));
+		testPoint = new Point(5, 2);
+		Assert.IsTrue(polygon.Contains(testPoint));
+		Assert.IsTrue(reversePolygon.Contains(testPoint));
 
-            testPoint = new Point(2, 4);
-            Assert.IsTrue(polygon.Contains(testPoint));
-            Assert.IsTrue(reversePolygon.Contains(testPoint));
+		testPoint = new Point(2, 2);
+		Assert.IsTrue(polygon.Contains(testPoint));
+		Assert.IsTrue(reversePolygon.Contains(testPoint));
 
-            testPoint = new Point(3, 4);
-            Assert.IsTrue(polygon.Contains(testPoint));
-            Assert.IsTrue(reversePolygon.Contains(testPoint));
-        }
-    }
+		testPoint = new Point(2, 4);
+		Assert.IsTrue(polygon.Contains(testPoint));
+		Assert.IsTrue(reversePolygon.Contains(testPoint));
+
+		testPoint = new Point(3, 4);
+		Assert.IsTrue(polygon.Contains(testPoint));
+		Assert.IsTrue(reversePolygon.Contains(testPoint));
+	}
 }

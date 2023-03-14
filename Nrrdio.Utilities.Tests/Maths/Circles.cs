@@ -1,130 +1,126 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nrrdio.Utilities.Maths;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Nrrdio.Utilities.Maths;
 
-namespace Nrrdio.Utilities.Tests {
-    [TestClass]
-    public class Circles {
-        [TestMethod]
-        public void RectangleCenter() {
-            var points = new List<Point> {
-                new Point(2, 0),
-                new Point(4, 4),
-                new Point(6, 3),
-                new Point(4, -1),
-            };
+namespace Nrrdio.Utilities.Tests;
 
-            var polygon = new Polygon(points);
-            var circle = new Circle(points, polygon.Centroid);
+[TestClass]
+public class Circles {
+	[TestMethod]
+	public void RectangleCenter() {
+		var points = new List<Point> {
+				new Point(2, 0),
+				new Point(4, 4),
+				new Point(6, 3),
+				new Point(4, -1),
+			};
 
-            Assert.AreEqual(new Point(4, 1.5), circle.Center);
-        }
+		var polygon = new Polygon(points);
+		var circle = new Circle(points, polygon.Centroid);
 
-        [TestMethod]
-        public void PolygonCircumcircleCenter() {
-            var points = new List<Point> {
-                new Point(2, 0),
-                new Point(2, 4),
-                new Point(4, 4),
-                new Point(4, 3),
-                new Point(5, 3),
-                new Point(5, 1),
-                new Point(4, 1),
-                new Point(4, 0),
-            };
+		Assert.AreEqual(new Point(4, 1.5), circle.Center);
+	}
 
-            var polygon = new Polygon(points);
-            var circle = new Circle(points, polygon.Centroid);
+	[TestMethod]
+	public void PolygonCircumcircleCenter() {
+		var points = new List<Point> {
+				new Point(2, 0),
+				new Point(2, 4),
+				new Point(4, 4),
+				new Point(4, 3),
+				new Point(5, 3),
+				new Point(5, 1),
+				new Point(4, 1),
+				new Point(4, 0),
+			};
 
-            Console.WriteLine($"Centroid: {polygon.Centroid}, Radius: {circle.Radius}");
-            Console.WriteLine($"Circle Center: {circle.Center}");
+		var polygon = new Polygon(points);
+		var circle = new Circle(points, polygon.Centroid);
 
-            Assert.AreEqual(new Point(3, 2), circle.Center);
-        }
+		Console.WriteLine($"Centroid: {polygon.Centroid}, Radius: {circle.Radius}");
+		Console.WriteLine($"Circle Center: {circle.Center}");
 
-        [TestMethod]
-        public void PolygonCircumcircleCenterReversed() {
-            var points = new List<Point> {
-                new Point(4, 4),
-                new Point(2, 4),
-                new Point(2, 0),
-                new Point(4, 0),
-                new Point(4, 1),
-                new Point(5, 1),
-                new Point(5, 3),
-                new Point(4, 3),
-            };
+		Assert.AreEqual(new Point(3, 2), circle.Center);
+	}
 
-            var polygon = new Polygon(points);
-            var circle = new Circle(points, polygon.Centroid);
+	[TestMethod]
+	public void PolygonCircumcircleCenterReversed() {
+		var points = new List<Point> {
+				new Point(4, 4),
+				new Point(2, 4),
+				new Point(2, 0),
+				new Point(4, 0),
+				new Point(4, 1),
+				new Point(5, 1),
+				new Point(5, 3),
+				new Point(4, 3),
+			};
 
-            Assert.AreEqual(new Point(3, 2), circle.Center);
-        }
+		var polygon = new Polygon(points);
+		var circle = new Circle(points, polygon.Centroid);
 
-        [TestMethod]
-        public void ComplexPolygonCircumcircleCenter() {
-            var points = new List<Point> {
-                new Point(2, 4),
-                new Point(3, 3.5),
-                new Point(2.5, 2.5),
-                new Point(4.5, 1.5),
-                new Point(6, -1),
-                new Point(2.5, 0),
-                new Point(2, 2),
-                new Point(0, 1.5),
-            };
+		Assert.AreEqual(new Point(3, 2), circle.Center);
+	}
 
-            var polygon = new Polygon(points);
-            var circle = new Circle(points, polygon.Centroid);
+	[TestMethod]
+	public void ComplexPolygonCircumcircleCenter() {
+		var points = new List<Point> {
+				new Point(2, 4),
+				new Point(3, 3.5),
+				new Point(2.5, 2.5),
+				new Point(4.5, 1.5),
+				new Point(6, -1),
+				new Point(2.5, 0),
+				new Point(2, 2),
+				new Point(0, 1.5),
+			};
 
-            Assert.AreEqual(new Point(3.28125, 0.925), circle.Center);
-        }
+		var polygon = new Polygon(points);
+		var circle = new Circle(points, polygon.Centroid);
 
-        [TestMethod]
-        public void ToPolygon() {
-            var points = new List<Point> {
-                new Point(2, 0),
-                new Point(4, 4),
-                new Point(6, 3),
-                new Point(4, -1),
-            };
+		Assert.AreEqual(new Point(3.28125, 0.925), circle.Center);
+	}
 
-            var polygon = new Polygon(points);
-            var circle = new Circle(points, polygon.Centroid);
+	[TestMethod]
+	public void ToPolygon() {
+		var points = new List<Point> {
+				new Point(2, 0),
+				new Point(4, 4),
+				new Point(6, 3),
+				new Point(4, -1),
+			};
 
-            Console.WriteLine($"Centroid: {polygon.Centroid}");
+		var polygon = new Polygon(points);
+		var circle = new Circle(points, polygon.Centroid);
 
-            foreach (var point in circle.ToPolygon(6).Vertices) {
-                Console.WriteLine(point);
-            }
+		Console.WriteLine($"Centroid: {polygon.Centroid}");
 
-            Assert.AreEqual(63, circle.ToPolygon(63).Vertices.Count());
-        }
+		foreach (var point in circle.ToPolygon(6).Vertices) {
+			Console.WriteLine(point);
+		}
 
-        [TestMethod]
-        public void PolygonContainsPoint() {
-            var points = new List<Point> {
-                new Point(2, 0),
-                new Point(4, 4),
-                new Point(6, 3),
-                new Point(4, -1),
-            };
+		Assert.AreEqual(63, circle.ToPolygon(63).Vertices.Count());
+	}
 
-            var polygon = new Polygon(points);
-            var circle = new Circle(points, polygon.Centroid);
+	[TestMethod]
+	public void PolygonContainsPoint() {
+		var points = new List<Point> {
+				new Point(2, 0),
+				new Point(4, 4),
+				new Point(6, 3),
+				new Point(4, -1),
+			};
 
-            var test = polygon.Centroid - new Point(circle.Radius, 0);
+		var polygon = new Polygon(points);
+		var circle = new Circle(points, polygon.Centroid);
 
-            Console.WriteLine($"Centroid: {polygon.Centroid}, Radius: {circle.Radius}");
-            Console.WriteLine($"Test: {test}");
+		var test = polygon.Centroid - new Point(circle.Radius, 0);
 
-            foreach (var point in circle.ToPolygon(6).Vertices) {
-                Console.WriteLine(point);
-            }
+		Console.WriteLine($"Centroid: {polygon.Centroid}, Radius: {circle.Radius}");
+		Console.WriteLine($"Test: {test}");
 
-            Assert.IsTrue(circle.ToPolygon(6).Vertices.Contains(test));
-        }
-    }
+		foreach (var point in circle.ToPolygon(6).Vertices) {
+			Console.WriteLine(point);
+		}
+
+		Assert.IsTrue(circle.ToPolygon(6).Vertices.Contains(test));
+	}
 }

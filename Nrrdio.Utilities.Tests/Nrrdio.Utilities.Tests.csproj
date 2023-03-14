@@ -4,6 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +18,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Nrrdio.Utilities.Maths\Nrrdio.Utilities.Maths.csproj" />
     <ProjectReference Include="..\Nrrdio.Utilities.Web\Nrrdio.Utilities.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
 
 </Project>
