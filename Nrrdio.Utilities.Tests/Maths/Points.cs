@@ -39,46 +39,56 @@ public class Points {
 	}
 
 	[TestMethod]
-	public void LeftOfPositiveLine() {
+	public void Relation_To_Line_Going_Up_Right() {
 		var line = new Segment(new Point(2, 0), new Point(4, 10));
 
+		// Lefts
 		Assert.IsTrue(new Point(0, 0).NearLine(line) > 0);
-		Assert.IsFalse(new Point(3, 3).NearLine(line) > 0);
 		Assert.IsTrue(new Point(1, 9).NearLine(line) > 0);
 		Assert.IsTrue(new Point(0, 100).NearLine(line) > 0);
+
+		// Rights
+		Assert.IsTrue(new Point(3, 3).NearLine(line) < 0);
 	}
 
-	[TestMethod]
-	public void RightOfNegativeLine() {
+    [TestMethod]
+    public void Relation_To_Line_Going_Up_Left() {
+        var line = new Segment(new Point(4, 0), new Point(2, 10));
+
+		// Lefts
+        Assert.IsTrue(new Point(2, 3).NearLine(line) > 0);
+        Assert.IsTrue(new Point(0, -600000).NearLine(line) > 0);
+        Assert.IsTrue(new Point(-100, 0).NearLine(line) > 0);
+
+        // Rights
+        Assert.IsTrue(new Point(4, 2).NearLine(line) < 0);
+        Assert.IsTrue(new Point(9, 3).NearLine(line) < 0);
+        Assert.IsTrue(new Point(100, 0).NearLine(line) < 0);
+    }
+
+    [TestMethod]
+	public void Relation_To_Line_Going_Down_Left() {
 		var line = new Segment(new Point(4, 10), new Point(2, 0));
 
-		Assert.IsTrue(new Point(0, 0).NearLine(line) < 0);
-		Assert.IsFalse(new Point(3, 3).NearLine(line) < 0);
-		Assert.IsTrue(new Point(1, 9).NearLine(line) < 0);
-		Assert.IsTrue(new Point(0, 100).NearLine(line) < 0);
-	}
+		// Lefts
+        Assert.IsTrue(new Point(4, 2).NearLine(line) > 0);
 
-	[TestMethod]
-	public void RightOfLine() {
-		var line = new Segment(new Point(2, 0), new Point(4, 10));
+        // Rights
+        Assert.IsTrue(new Point(2, 3).NearLine(line) < 0);
+    }
 
-		Assert.IsTrue(new Point(3, -4).NearLine(line) < 0);
-		Assert.IsFalse(new Point(2, 3).NearLine(line) < 0);
-		Assert.IsTrue(new Point(9, 3).NearLine(line) < 0);
-		Assert.IsTrue(new Point(100, 0).NearLine(line) < 0);
-	}
+    [TestMethod]
+    public void Relation_To_Line_Going_Down_Right() {
+        var line = new Segment(new Point(2, 10), new Point(4, 0));
 
-	[TestMethod]
-	public void LeftOfNegativeLine() {
-		var line = new Segment(new Point(4, 10), new Point(2, 0));
+        // Lefts
+        Assert.IsTrue(new Point(4, 2).NearLine(line) > 0);
 
-		Assert.IsTrue(new Point(3, -4).NearLine(line) > 0);
-		Assert.IsFalse(new Point(2, 3).NearLine(line) > 0);
-		Assert.IsTrue(new Point(9, 3).NearLine(line) > 0);
-		Assert.IsTrue(new Point(100, 0).NearLine(line) > 0);
-	}
+        // Rights
+        Assert.IsTrue(new Point(2, 3).NearLine(line) < 0);
+    }
 
-	[TestMethod]
+    [TestMethod]
 	public void OnLine() {
 		var line = new Segment(new Point(2, 0), new Point(4, 4));
 
