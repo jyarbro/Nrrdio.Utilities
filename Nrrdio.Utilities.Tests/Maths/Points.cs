@@ -44,12 +44,31 @@ public class Points {
 
 		// Lefts
 		Assert.IsTrue(new Point(0, 0).NearLine(line) > 0);
+		Assert.IsTrue(new Point(0, 0).LeftSideOfLine(line));
 		Assert.IsTrue(new Point(1, 9).NearLine(line) > 0);
-		Assert.IsTrue(new Point(0, 100).NearLine(line) > 0);
+		Assert.IsTrue(new Point(1, 9).LeftSideOfLine(line));
+        Assert.IsTrue(new Point(0, 100).NearLine(line) > 0);
+        Assert.IsTrue(new Point(0, 100).LeftSideOfLine(line));
 
-		// Rights
-		Assert.IsTrue(new Point(3, 3).NearLine(line) < 0);
+        // Rights
+        Assert.IsFalse(new Point(3, 3).NearLine(line) > 0);
+        Assert.IsFalse(new Point(3, 3).LeftSideOfLine(line));
 	}
+
+    [TestMethod]
+    public void Relation_To_Line_Going_Down_Right() {
+        var line = new Segment(new Point(2, 10), new Point(4, 1));
+
+        Assert.IsTrue(new Point(4, 3).LeftSideOfLine(line));
+        Assert.IsTrue(new Point(3, 8000).LeftSideOfLine(line));
+        Assert.IsFalse(new Point(2, 3).LeftSideOfLine(line));
+        Assert.IsFalse(new Point(3, -5).LeftSideOfLine(line));
+        Assert.IsFalse(new Point(-1, -5).LeftSideOfLine(line));
+
+		line = new Segment(new Point(153, 3), new Point(188, 99));
+
+        Assert.IsFalse(new Point(254, 42).LeftSideOfLine(line));
+    }
 
     [TestMethod]
     public void Relation_To_Line_Going_Up_Left() {
@@ -57,13 +76,19 @@ public class Points {
 
 		// Lefts
         Assert.IsTrue(new Point(2, 3).NearLine(line) > 0);
+        Assert.IsTrue(new Point(2, 3).LeftSideOfLine(line));
         Assert.IsTrue(new Point(0, -600000).NearLine(line) > 0);
+        Assert.IsTrue(new Point(0, -600000).LeftSideOfLine(line));
         Assert.IsTrue(new Point(-100, 0).NearLine(line) > 0);
+        Assert.IsTrue(new Point(-100, 0).LeftSideOfLine(line));
 
         // Rights
-        Assert.IsTrue(new Point(4, 2).NearLine(line) < 0);
-        Assert.IsTrue(new Point(9, 3).NearLine(line) < 0);
-        Assert.IsTrue(new Point(100, 0).NearLine(line) < 0);
+        Assert.IsFalse(new Point(4, 2).NearLine(line) > 0);
+        Assert.IsFalse(new Point(4, 2).LeftSideOfLine(line));
+        Assert.IsFalse(new Point(9, 3).NearLine(line) > 0);
+        Assert.IsFalse(new Point(9, 3).LeftSideOfLine(line));
+        Assert.IsFalse(new Point(100, 0).NearLine(line) > 0);
+        Assert.IsFalse(new Point(100, 0).LeftSideOfLine(line));
     }
 
     [TestMethod]
@@ -72,20 +97,11 @@ public class Points {
 
 		// Lefts
         Assert.IsTrue(new Point(4, 2).NearLine(line) > 0);
+        Assert.IsTrue(new Point(4, 2).LeftSideOfLine(line));
 
         // Rights
-        Assert.IsTrue(new Point(2, 3).NearLine(line) < 0);
-    }
-
-    [TestMethod]
-    public void Relation_To_Line_Going_Down_Right() {
-        var line = new Segment(new Point(2, 10), new Point(4, 0));
-
-        // Lefts
-        Assert.IsTrue(new Point(4, 2).NearLine(line) > 0);
-
-        // Rights
-        Assert.IsTrue(new Point(2, 3).NearLine(line) < 0);
+        Assert.IsFalse(new Point(2, 3).NearLine(line) > 0);
+        Assert.IsFalse(new Point(2, 3).LeftSideOfLine(line));
     }
 
     [TestMethod]

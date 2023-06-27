@@ -23,13 +23,14 @@ public class Point : IComparable<Point> {
 	/// < 0 : point is to the relative right of the line
 	/// </summary>
 	public double NearLine(Segment segment) => segment.Vector.Cross(this - segment.Point1);
+    public bool LeftSideOfLine(Segment segment) => NearLine(segment) > 0;
 
-	/// <summary>
-	/// > 0 : This is on relative right of the other.
-	/// = 0 : Overlapping
-	/// < 0 : This is on relative left of the other.
-	/// </summary>
-	public double Cross(Point other) => X * other.Y - Y * other.X;
+    /// <summary>
+    /// > 0 : This is on relative right of the other.
+    /// = 0 : Overlapping
+    /// < 0 : This is on relative left of the other.
+    /// </summary>
+    public double Cross(Point other) => X * other.Y - Y * other.X;
 
 	/// <summary>
 	/// Dot product that treats a point as a vector from origin
