@@ -34,7 +34,7 @@ public class Segment {
 
 		var cross = Vector.Cross(other.Vector);
 
-		// parallel
+		// codirectional
 		if (cross == 0) {
 			// not colinear
 			if (Vector.Cross(differenceVector1) != 0 || other.Vector.Cross(differenceVector1) != 0) {
@@ -120,7 +120,15 @@ public class Segment {
 
 	public double Cross(Point point) => Vector.Cross(point - Point1);
 
-	public bool Contains(Point point) => Math.Abs(Vector.Magnitude - ((point - Point1).Magnitude + (point - Point2).Magnitude)) < 1e-10;
+    public float AngleTo(Segment other) {
+        var radians = Math.Acos(Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude));
+		var degrees = Circle.FromRadians(radians);
+
+		// Loss of precision due to doubles math.
+		return Convert.ToSingle(degrees);
+    }
+
+    public bool Contains(Point point) => Math.Abs(Vector.Magnitude - ((point - Point1).Magnitude + (point - Point2).Magnitude)) < 1e-10;
 	public bool Contains(IEnumerable<Point> points) => points.All(point => Contains(point));
 	public bool Contains(params Point[] points) => points.All(point => Contains(point));
 

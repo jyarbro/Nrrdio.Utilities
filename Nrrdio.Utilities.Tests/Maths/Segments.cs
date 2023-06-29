@@ -1,4 +1,5 @@
-﻿using Nrrdio.Utilities.Maths;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nrrdio.Utilities.Maths;
 
 namespace Nrrdio.Utilities.Tests;
 
@@ -141,4 +142,17 @@ public class Segments {
 		Assert.IsTrue(segment.Contains(new Point(6.59234123 / 2, 10)));
 		Assert.IsFalse(segment.Contains(new Point(6, 9)));
 	}
+
+	[TestMethod]
+	public void AngleTo() {
+		var segment1 = new Segment(new Point(5, 10), new Point(10, 10));
+		var segment2 = new Segment(new Point(5, 10), new Point(10, 15));
+
+		Assert.AreEqual(45D, segment1.AngleTo(segment2));
+
+        segment1 = new Segment(new Point(100, 5), new Point(0, 8));
+        segment2 = new Segment(new Point(100, 0), new Point(0, 0));
+
+        Assert.AreEqual(1.718, Math.Round(segment1.AngleTo(segment2), 3));
+    }
 }

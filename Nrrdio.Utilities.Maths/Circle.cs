@@ -117,5 +117,6 @@ public class Circle {
 		Radius = Math.Max(Math.Max(Center.Distance(p0), Center.Distance(p1)), Center.Distance(p2));
 	}
 
-	double ToRadians(double value) => Math.PI / 180 * value;
+    public static double ToRadians(double degrees) => Math.PI / 180 * degrees;
+	public static double FromRadians(double radians) => radians * (180 / Math.PI);
 }

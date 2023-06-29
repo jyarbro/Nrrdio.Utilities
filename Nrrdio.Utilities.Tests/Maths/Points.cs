@@ -66,8 +66,10 @@ public class Points {
         Assert.IsFalse(new Point(-1, -5).LeftSideOfLine(line));
 
 		line = new Segment(new Point(153, 3), new Point(188, 99));
-
         Assert.IsFalse(new Point(254, 42).LeftSideOfLine(line));
+    
+		line = new Segment(new Point(408, 102), new Point(493, 168));
+        Assert.IsFalse(new Point(597, 170).LeftSideOfLine(line));
     }
 
     [TestMethod]
