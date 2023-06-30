@@ -25,7 +25,7 @@ public class Segment {
 	/// Point intersection = null
 	/// Point intersectionEnd = null
 	/// </returns>
-	public (bool, Point, Point) Intersects(Segment other) {
+	public (bool Intersects, Point Intersection, Point IntersectionEnd) Intersects(Segment other) {
 		var intersects = false;
 		Point intersection = null;
 		Point intersectionEnd = null;
