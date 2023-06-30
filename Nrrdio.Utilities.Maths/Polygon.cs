@@ -15,7 +15,7 @@ public class Polygon {
 	public Polygon(params Point[] vertices) : this(vertices.AsEnumerable()) { }
 	public Polygon(IEnumerable<Point> vertices) {
 		if (vertices is null || !vertices.Any()) {
-			throw new ArgumentException(nameof(vertices));
+            throw new ArgumentException("Polygons require vertices", nameof(vertices));
 		}
 
 		Vertices.AddRange(vertices);
@@ -31,7 +31,7 @@ public class Polygon {
 	}
 
 	public bool Contains(Point point) {
-		bool contains = false;
+        var contains = false;
 
 		for (var i = 0; i < VertexCount; i++) {
 			var j = (i + 1) % VertexCount;
