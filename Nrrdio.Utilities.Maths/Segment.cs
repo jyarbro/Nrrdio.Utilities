@@ -138,11 +138,8 @@ public class Segment {
 	public static bool operator !=(Segment left, Segment right) => !Equals(left, right);
 
 	public override bool Equals(object obj) => (obj is Segment other) && Equals(other);
-	public bool Equals(Segment other) {
-		return (Point1 == other.Point1 && Point2 == other.Point2)
-			|| (Point1 == other.Point2 && Point2 == other.Point1);
-	}
-	public static bool Equals(Segment left, Segment right) => left.Equals(right);
+    public bool Equals(Segment other) => (Point1 == other.Point1 && Point2 == other.Point2);
+    public static bool Equals(Segment left, Segment right) => left.Equals(right);
 
 	public override int GetHashCode() => ((int) Point1.X ^ (int) Point2.X ^ (int) Point1.Y ^ (int) Point2.Y).GetHashCode();
 	public override string ToString() => $"{nameof(Segment)} [{Point1} {Point2}]";
