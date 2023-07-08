@@ -35,9 +35,12 @@ public class Segment {
 		var cross = Vector.Cross(other.Vector);
 
 		// codirectional
-		if (cross == 0) {
-			// not colinear
-			if (Vector.Cross(differenceVector1) != 0 || other.Vector.Cross(differenceVector1) != 0) {
+		if (cross < 1e-10 && cross > 0 - 1e-10) {
+			var diffCross1 = Vector.Cross(differenceVector1);
+			var diffCross2 = other.Vector.Cross(differenceVector1);
+
+            // not colinear
+            if (diffCross1 > 1e-10 || diffCross1 < 0 - 1e-10 || diffCross2 > 1e-10 || diffCross2 < 0 - 1e-10) {
 				intersects = false;
 			}
 			else {

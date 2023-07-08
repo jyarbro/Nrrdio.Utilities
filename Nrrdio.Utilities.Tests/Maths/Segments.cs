@@ -13,7 +13,7 @@ public class Segments {
 		var segment4 = new Segment(new Point(6, 6), new Point(10, 10));
 
 		Assert.AreEqual(segment1, segment2);
-		Assert.AreEqual(segment2, segment3);
+		Assert.AreNotEqual(segment2, segment3);
 		Assert.AreNotEqual(segment3, segment4);
 	}
 
@@ -89,7 +89,16 @@ public class Segments {
 		Assert.AreEqual((true, segment2.Point1, segment2.Point2), segment2.Intersects(segment1));
 	}
 
-	[TestMethod]
+    [TestMethod]
+    public void ColinearOverlapSameStart() {
+        var segment1 = new Segment(new Point(463.34334836776395, 163.34334836776392), new Point(600, 258.11552765609));
+        var segment2 = new Segment(new Point(463.34334836776395, 163.34334836776392), new Point(508.84201564160634, 194.896937605855));
+
+        Assert.AreEqual((true, segment1.Point1, segment2.Point2), segment2.Intersects(segment1));
+        Assert.AreEqual((true, segment1.Point1, segment2.Point2), segment1.Intersects(segment2));
+    }
+
+    [TestMethod]
 	public void ColinearReverseOverlap() {
 		var segment1 = new Segment(new Point(2, 0), new Point(4, 4));
 		var segment2 = new Segment(new Point(3.5, 3), new Point(3, 2));
