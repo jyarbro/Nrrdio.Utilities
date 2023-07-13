@@ -1,21 +1,30 @@
 ﻿namespace Nrrdio.Utilities.Maths;
 
 public class Segment {
-	public Point Vector { get; protected init; }
 	public Point Point1 { get; protected init; }
 	public Point Point2 { get; protected init; }
 
-	public double Slope => (Point2.Y - Point1.Y) / (Point2.X - Point1.X);
-	public double InterceptY => Point1.Y - (Slope * Point1.X);
-	public double InterceptX => -InterceptY / Slope;
-	public bool IsPoint => Point1 == Point2;
+	public Point Vector { get; protected init; }
+    public Point Midpoint { get; protected init; }
+
+	public double Slope { get; protected init; }
+	public double InterceptY { get; protected init; }
+	public double InterceptX { get ; protected init; }
+    public bool IsPoint { get; protected init; }
 
 	public Segment() { }
 	public Segment(Point point1, Point point2) {
 		Point1 = point1;
 		Point2 = point2;
+		
 		Vector = point2 - point1;
-	}
+		Midpoint = new Point((point1.X + point2.X) / 2, (point1.Y + point2.Y) / 2);
+
+        Slope = (point2.Y - point1.Y) / (point2.X - point1.X);
+		InterceptY = point1.Y - (Slope * point1.X);
+		InterceptX = -InterceptY / Slope;
+		IsPoint = point1 == point2;
+    }
 
 	/// <summary>
 	/// Determines if and where another segment intersects with this segment.
