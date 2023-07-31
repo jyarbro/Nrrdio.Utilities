@@ -163,9 +163,14 @@ public class Segments {
         segment2 = new Segment(new Point(100, 0), new Point(0, 0));
 
         Assert.AreEqual(1.718, Math.Round(segment1.AngleTo(segment2), 3));
+
+		segment1 = new Segment(new Point(205.51224777884937, 408.80471583332934), new Point(135.27451178530475, 386.92074581254468));
+		segment2 = new Segment(new Point(135.27451178530475, 386.92074581254468), new Point(65.036775791760121, 365.03677579176));
+
+        Assert.AreEqual(0, Math.Round(segment1.AngleTo(segment2), 3));
     }
 
-	[TestMethod]
+    [TestMethod]
 	public void Midpoint() {
 		var point1 = new Point(-3, 5);
 		var point2 = new Point(8, -1);

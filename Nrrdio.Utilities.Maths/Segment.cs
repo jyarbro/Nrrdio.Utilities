@@ -133,8 +133,11 @@ public class Segment {
 	public double Cross(Point point) => Vector.Cross(point - Point1);
 
     public float AngleTo(Segment other) {
-        var radians = Math.Acos(Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude));
-		var degrees = Circle.FromRadians(radians);
+		// Remove imprecision introduced in doubles math.
+		var cleanedValue = Math.Round(Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude), 15);
+        var radians = Math.Acos(cleanedValue);
+
+        var degrees = Circle.FromRadians(radians);
 
 		// Loss of precision due to doubles math.
 		return Convert.ToSingle(degrees);
