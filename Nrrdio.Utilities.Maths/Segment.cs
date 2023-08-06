@@ -41,10 +41,10 @@ public class Segment {
 
 		var differenceVector1 = Point1 - other.Point1;
 
-		var cross = Vector.Cross(other.Vector);
+        var cross = Math.Round(Vector.Cross(other.Vector), 10);
 
-		// codirectional
-		if (cross < 1e-10 && cross > 0 - 1e-10) {
+        // codirectional
+        if (cross <= 1e-10 && cross >= 0 - 1e-10) {
 			var diffCross1 = Vector.Cross(differenceVector1);
 			var diffCross2 = other.Vector.Cross(differenceVector1);
 
