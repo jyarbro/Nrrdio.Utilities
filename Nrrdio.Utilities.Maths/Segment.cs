@@ -18,11 +18,11 @@ public class Segment {
 		Point2 = point2;
 		
 		Vector = point2 - point1;
-		Midpoint = new Point((point1.X + point2.X) / 2, (point1.Y + point2.Y) / 2);
+		Midpoint = new Point(Math.Round((point1.X + point2.X) / 2, 15), Math.Round((point1.Y + point2.Y) / 2, 15));
 
-        Slope = (point2.Y - point1.Y) / (point2.X - point1.X);
+        Slope = Math.Round((point2.Y - point1.Y) / (point2.X - point1.X), 15);
 		InterceptY = point1.Y - (Slope * point1.X);
-		InterceptX = -InterceptY / Slope;
+		InterceptX = Math.Round(-InterceptY / Slope, 15);
 		IsPoint = point1 == point2;
     }
 
@@ -77,12 +77,12 @@ public class Segment {
 
 					// avoid divide by zero
 					if (other.Vector.X != 0) {
-						overlapStart = differenceVector1.X / other.Vector.X;
-						overlapEnd = differenceVector2.X / other.Vector.X;
+						overlapStart = Math.Round(differenceVector1.X / other.Vector.X, 15);
+						overlapEnd = Math.Round(differenceVector2.X / other.Vector.X, 15);
 					}
 					else if (other.Vector.Y != 0) {
-						overlapStart = differenceVector1.Y / other.Vector.Y;
-						overlapEnd = differenceVector2.Y / other.Vector.Y;
+						overlapStart = Math.Round(differenceVector1.Y / other.Vector.Y, 15);
+						overlapEnd = Math.Round(differenceVector2.Y / other.Vector.Y, 15);
 					}
 
 					// ensure small before large
@@ -114,7 +114,7 @@ public class Segment {
 			}
 		}
 		else {
-			var intersectWithThis = other.Vector.Cross(differenceVector1) / cross;
+			var intersectWithThis = Math.Round(other.Vector.Cross(differenceVector1) / cross, 15);
 
 			// confirmed intersection
 			if (intersectWithThis >= 0 && intersectWithThis <= 1) {

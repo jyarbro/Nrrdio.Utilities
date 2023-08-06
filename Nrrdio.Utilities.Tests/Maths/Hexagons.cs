@@ -1,4 +1,5 @@
 ﻿using Nrrdio.Utilities.Maths;
+using System.Net;
 
 namespace Nrrdio.Utilities.Tests;
 
@@ -43,7 +44,15 @@ public class Hexagons {
 	public void SixApothems() {
 		var hexagon = new Hexagon(new Point(0, 0), 6, 1);
 
-		var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).Magnitude == hexagon.Apothem);
+		var vertices = new List<Point>();
+
+		foreach (var vertex in hexagon.Vertices) {
+			var vector = hexagon.Centroid - vertex;
+
+			 if (vector.Magnitude == hexagon.Apothem) {
+				vertices.Add(vector);
+			}
+        }
 
 		Assert.AreEqual(6, vertices.Count());
 	}

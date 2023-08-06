@@ -79,7 +79,7 @@ public class Circle {
 			throw new ArgumentException("Requires at least 3 sides");
 		}
 
-		var spacing = Math.PI * (2d / sides);
+		var spacing = Math.PI * (Math.Round(2d / sides, 15));
 
 		double x;
 		double y;
@@ -113,10 +113,10 @@ public class Circle {
 
 		var div = (2 * (p0.X * (p2.Y - p1.Y) + p1.X * (p0.Y - p2.Y) + p2.X * (p1.Y - p0.Y)));
 
-		Center = new Point(aux1 / div, aux2 / div);
+		Center = new Point(Math.Round(aux1 / div, 15), Math.Round(aux2 / div, 15));
 		Radius = Math.Max(Math.Max(Center.Distance(p0), Center.Distance(p1)), Center.Distance(p2));
 	}
 
-    public static double ToRadians(double degrees) => Math.PI / 180 * degrees;
-	public static double FromRadians(double radians) => radians * (180 / Math.PI);
+    public static double ToRadians(double degrees) => Math.Round(Math.PI / 180 * degrees, 15);
+	public static double FromRadians(double radians) => Math.Round(radians * (180 / Math.PI), 15);
 }

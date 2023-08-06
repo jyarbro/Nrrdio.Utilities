@@ -5,17 +5,20 @@ public class Point : IComparable<Point> {
 	public double Y { get; protected init; }
 
 	// https://en.wikipedia.org/wiki/Polar_coordinate_system
-	public double PhiAngle => Math.Atan2(Y, X);
-	public double Magnitude => Math.Sqrt(X * X + Y * Y);
+	public double PhiAngle { get; protected init; }
+	public double Magnitude { get; protected init; }
 
 	public Point() { }
 	public Point(Point other) : this(other.X, other.Y) { }
 	public Point(double x, double y) {
-		X = x;
-		Y = y;
-	}
+		X = Math.Round(x, 15);
+		Y = Math.Round(y, 15);
 
-	public double Distance(Point other) => (this - other).Magnitude;
+		PhiAngle = Math.Round(Math.Atan2(Y, X), 15);
+        Magnitude = Math.Round(Math.Sqrt(X * X + Y * Y), 15);
+    }
+
+    public double Distance(Point other) => (this - other).Magnitude;
 
 	/// <summary>
 	/// > 0 : point is to the relative left of the line
