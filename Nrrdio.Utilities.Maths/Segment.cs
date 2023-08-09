@@ -45,8 +45,8 @@ public class Segment {
 
         // codirectional
         if (cross <= 1e-10 && cross >= 0 - 1e-10) {
-			var diffCross1 = Vector.Cross(differenceVector1);
-			var diffCross2 = other.Vector.Cross(differenceVector1);
+			var diffCross1 = Math.Round(Vector.Cross(differenceVector1), 10);
+			var diffCross2 = Math.Round(other.Vector.Cross(differenceVector1), 10);
 
             // not colinear
             if (diffCross1 > 1e-10 || diffCross1 < 0 - 1e-10 || diffCross2 > 1e-10 || diffCross2 < 0 - 1e-10) {

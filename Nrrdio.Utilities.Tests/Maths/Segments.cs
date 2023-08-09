@@ -98,10 +98,10 @@ public class Segments {
         Assert.AreEqual((true, segment1.Point1, segment2.Point2), segment1.Intersects(segment2));
 
         segment1 = new Segment(new Point(401.04278015968674, 67.0196425998768), new Point(551.28296413574037, 205.27863549802379));
-        segment2 = new Segment(new Point(401.04278015968674, 67.0196425998768), new Point(406.78548879217476, 72.304387939124567));
+        segment2 = new Segment(new Point(406.78548879217476, 72.304387939124567), new Point(435.14459119245265, 98.401939430294789));
 
-        Assert.AreEqual((true, segment1.Point1, segment2.Point2), segment2.Intersects(segment1));
-        Assert.AreEqual((true, segment1.Point1, segment2.Point2), segment1.Intersects(segment2));
+        Assert.AreEqual((true, segment2.Point1, segment2.Point2), segment2.Intersects(segment1));
+        Assert.AreEqual((true, segment2.Point1, segment2.Point2), segment1.Intersects(segment2));
     }
 
     [TestMethod]
