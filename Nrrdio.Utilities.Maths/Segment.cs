@@ -134,7 +134,7 @@ public class Segment {
 
     public float AngleTo(Segment other) {
 		// Remove imprecision introduced in doubles math.
-		var cleanedValue = Math.Round(Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude), 15);
+		var cleanedValue = Math.Round(Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude), 14);
         var radians = Math.Acos(cleanedValue);
 
         var degrees = Circle.FromRadians(radians);

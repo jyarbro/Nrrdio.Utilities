@@ -163,17 +163,26 @@ public class Segments {
 		var segment1 = new Segment(new Point(5, 10), new Point(10, 10));
 		var segment2 = new Segment(new Point(5, 10), new Point(10, 15));
 
-		Assert.AreEqual(45D, segment1.AngleTo(segment2));
+        var angle = segment1.AngleTo(segment2);
+        Assert.AreEqual(45D, angle);
 
         segment1 = new Segment(new Point(100, 5), new Point(0, 8));
         segment2 = new Segment(new Point(100, 0), new Point(0, 0));
 
-        Assert.AreEqual(1.718, Math.Round(segment1.AngleTo(segment2), 3));
+        angle = segment1.AngleTo(segment2);
+        Assert.AreEqual(1.718, Math.Round(angle, 3));
 
 		segment1 = new Segment(new Point(205.51224777884937, 408.80471583332934), new Point(135.27451178530475, 386.92074581254468));
 		segment2 = new Segment(new Point(135.27451178530475, 386.92074581254468), new Point(65.036775791760121, 365.03677579176));
 
-        Assert.AreEqual(0, Math.Round(segment1.AngleTo(segment2), 3));
+        angle = segment1.AngleTo(segment2);
+        Assert.AreEqual(0, angle);
+
+        segment1 = new Segment(new Point(89.150129014188011, 302.67028436078027), new Point(97.754420007461519, 335.78651332747489));
+        segment2 = new Segment(new Point(97.754420007461519, 335.78651332747489), new Point(97.846244302003811, 336.139927032932));
+
+		angle = segment1.AngleTo(segment2);
+        Assert.AreEqual(0, Math.Round(angle, 3));
     }
 
     [TestMethod]
