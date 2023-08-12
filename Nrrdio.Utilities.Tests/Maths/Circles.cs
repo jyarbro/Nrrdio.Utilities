@@ -1,4 +1,5 @@
-﻿using Nrrdio.Utilities.Maths;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nrrdio.Utilities.Maths;
 
 namespace Nrrdio.Utilities.Tests;
 
@@ -80,7 +81,7 @@ public class Circles {
 	}
 
 	[TestMethod]
-	public void ToPolygon() {
+	public void ToComplexPolygon() {
 		var points = new List<Point> {
 				new Point(2, 0),
 				new Point(4, 4),
@@ -99,6 +100,14 @@ public class Circles {
 
 		Assert.AreEqual(63, circle.ToPolygon(63).Vertices.Count());
 	}
+
+	[TestMethod]
+	public void ToShapes() {
+		for (int i = 3; i < 30; i++) {
+            var circle = new Circle(new Point(300, 300), 300).ToPolygon(i);
+            Assert.AreEqual(i, circle.Vertices.Count);
+        }
+    }
 
 	[TestMethod]
 	public void PolygonContainsPoint() {

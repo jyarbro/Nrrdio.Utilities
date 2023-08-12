@@ -79,7 +79,7 @@ public class Circle {
 			throw new ArgumentException("Requires at least 3 sides");
 		}
 
-		var spacing = Math.PI * (Math.Round(2d / sides, 15));
+		var spacing = Math.PI * 2d / sides;
 
 		double x;
 		double y;
@@ -88,9 +88,12 @@ public class Circle {
 
 		var points = new List<Point>();
 
-		for (var theta = 0d; theta < Math.PI * 2; theta += spacing) {
+		var theta = 0d;
+
+        for (var i = 0; i < sides; i++) {
 			x = Radius * Math.Cos(theta);
 			y = Radius * Math.Sin(theta);
+			theta += spacing;
 
 			offset = new Point(x, y);
 			point = Center + offset;
