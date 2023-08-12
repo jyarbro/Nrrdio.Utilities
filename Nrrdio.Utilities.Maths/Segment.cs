@@ -132,15 +132,18 @@ public class Segment {
 
 	public double Cross(Point point) => Vector.Cross(point - Point1);
 
-    public float AngleTo(Segment other) {
+    public double AngleTo(Segment other) {
+		var value = Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude);
+		
 		// Remove imprecision introduced in doubles math.
-		var cleanedValue = Math.Round(Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude), 14);
-        var radians = Math.Acos(cleanedValue);
+		if (value > 1 && value < 1 + 1E-15) {
+			value = 1;
+		}
+        
+		var radians = Math.Acos(value);
 
-        var degrees = Circle.FromRadians(radians);
-
-		// Loss of precision due to doubles math.
-		return Convert.ToSingle(degrees);
+        // Loss of precision due to doubles math.
+        return Math.Round(Circle.FromRadians(radians), 13);
     }
 
     public bool Contains(Point point) => Math.Abs(Vector.Magnitude - ((point - Point1).Magnitude + (point - Point2).Magnitude)) < 1e-10;

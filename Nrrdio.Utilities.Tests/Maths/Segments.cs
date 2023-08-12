@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nrrdio.Utilities.Maths;
+﻿using Nrrdio.Utilities.Maths;
 
 namespace Nrrdio.Utilities.Tests;
 
@@ -159,6 +158,41 @@ public class Segments {
 	}
 
 	[TestMethod]
+	public void AngleIsNumber() {
+		var origin = new Point(0, 0);
+        var segment1 = new Segment(origin, new Point(1000, 0));
+		var increment = .001d;
+
+        for (double x = -1000; x < 1000; x += increment) {
+			var segment2 = new Segment(origin, new Point(x, 1000));
+
+			var angle = segment1.AngleTo(segment2);
+			Assert.IsFalse(double.IsNaN(angle));
+		}
+
+        for (double x = -1000; x < 1000; x += increment) {
+            var segment2 = new Segment(origin, new Point(x, -1000));
+
+            var angle = segment1.AngleTo(segment2);
+            Assert.IsFalse(double.IsNaN(angle));
+        }
+
+        for (double y = -1000; y < 1000; y += increment) {
+            var segment2 = new Segment(origin, new Point(1000, y));
+
+            var angle = segment1.AngleTo(segment2);
+            Assert.IsFalse(double.IsNaN(angle));
+        }
+
+        for (double y = -1000; y < 1000; y += increment) {
+            var segment2 = new Segment(origin, new Point(-1000, y));
+
+            var angle = segment1.AngleTo(segment2);
+            Assert.IsFalse(double.IsNaN(angle));
+        }
+    }
+
+    [TestMethod]
 	public void AngleTo() {
 		var segment1 = new Segment(new Point(5, 10), new Point(10, 10));
 		var segment2 = new Segment(new Point(5, 10), new Point(10, 15));
