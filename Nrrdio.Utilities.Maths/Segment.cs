@@ -45,12 +45,12 @@ public class Segment {
         cross = Math.Round(cross, 10, MidpointRounding.ToEven);
 
         // codirectional
-        if (cross <= 1e-10 && cross >= 0 - 1e-10) {
+        if (cross <= 9e-10 && cross >= 0 - 9e-10) {
 			var diffCross1 = Math.Round(Vector.Cross(differenceVector1), 10, MidpointRounding.ToEven);
 			var diffCross2 = Math.Round(other.Vector.Cross(differenceVector1), 10, MidpointRounding.ToEven);
 
             // not colinear
-            if (diffCross1 > 1e-10 || diffCross1 < 0 - 1e-10 || diffCross2 > 1e-10 || diffCross2 < 0 - 1e-10) {
+            if (diffCross1 > 9e-10 || diffCross1 < 0 - 9e-10 || diffCross2 > 9e-10 || diffCross2 < 0 - 9e-10) {
 				intersects = false;
 			}
 			else {
@@ -78,12 +78,12 @@ public class Segment {
 
 					// avoid divide by zero
 					if (other.Vector.X != 0) {
-						overlapStart = Math.Round(differenceVector1.X / other.Vector.X, 13, MidpointRounding.ToEven);
-						overlapEnd = Math.Round(differenceVector2.X / other.Vector.X, 13, MidpointRounding.ToEven);
+						overlapStart = differenceVector1.X / other.Vector.X;
+						overlapEnd = differenceVector2.X / other.Vector.X;
 					}
 					else if (other.Vector.Y != 0) {
-						overlapStart = Math.Round(differenceVector1.Y / other.Vector.Y, 13, MidpointRounding.ToEven);
-						overlapEnd = Math.Round(differenceVector2.Y / other.Vector.Y, 13, MidpointRounding.ToEven);
+						overlapStart = differenceVector1.Y / other.Vector.Y;
+						overlapEnd = differenceVector2.Y / other.Vector.Y;
 					}
 
 					// ensure small before large
