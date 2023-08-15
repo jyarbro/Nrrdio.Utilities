@@ -8,7 +8,7 @@ public class Hexagon : Polygon {
 
 	public Hexagon(Point center, int segmentsPerSide, double segmentLength) {
 		Radius = segmentsPerSide * segmentLength;
-		Apothem = BASE_APOTHEM * Radius;
+		Apothem = Math.Round(BASE_APOTHEM * Radius, 13, MidpointRounding.ToEven);
 
 		var lerpBy = 1d / segmentsPerSide;
 

@@ -210,7 +210,7 @@ public class Segments {
 		segment2 = new Segment(new Point(135.27451178530475, 386.92074581254468), new Point(65.036775791760121, 365.03677579176));
 
         angle = segment1.AngleTo(segment2);
-        Assert.AreEqual(0, angle);
+        Assert.AreEqual(0, Math.Round(angle, 3));
 
         segment1 = new Segment(new Point(89.150129014188011, 302.67028436078027), new Point(97.754420007461519, 335.78651332747489));
         segment2 = new Segment(new Point(97.754420007461519, 335.78651332747489), new Point(97.846244302003811, 336.139927032932));

@@ -18,11 +18,11 @@ public class Segment {
 		Point2 = point2;
 		
 		Vector = point2 - point1;
-		Midpoint = new Point(Math.Round((point1.X + point2.X) / 2, 15), Math.Round((point1.Y + point2.Y) / 2, 15));
+		Midpoint = new Point(Math.Round((point1.X + point2.X) / 2, 13, MidpointRounding.ToEven), Math.Round((point1.Y + point2.Y) / 2, 13, MidpointRounding.ToEven));
 
-        Slope = Math.Round((point2.Y - point1.Y) / (point2.X - point1.X), 15);
+        Slope = Math.Round((point2.Y - point1.Y) / (point2.X - point1.X), 13, MidpointRounding.ToEven);
 		InterceptY = point1.Y - (Slope * point1.X);
-		InterceptX = Math.Round(-InterceptY / Slope, 15);
+		InterceptX = Math.Round(-InterceptY / Slope, 13, MidpointRounding.ToEven);
 		IsPoint = point1 == point2;
     }
 
@@ -41,12 +41,13 @@ public class Segment {
 
 		var differenceVector1 = Point1 - other.Point1;
 
-        var cross = Math.Round(Vector.Cross(other.Vector), 10);
+		var cross = Vector.Cross(other.Vector);
+        cross = Math.Round(cross, 10, MidpointRounding.ToEven);
 
         // codirectional
         if (cross <= 1e-10 && cross >= 0 - 1e-10) {
-			var diffCross1 = Math.Round(Vector.Cross(differenceVector1), 10);
-			var diffCross2 = Math.Round(other.Vector.Cross(differenceVector1), 10);
+			var diffCross1 = Math.Round(Vector.Cross(differenceVector1), 10, MidpointRounding.ToEven);
+			var diffCross2 = Math.Round(other.Vector.Cross(differenceVector1), 10, MidpointRounding.ToEven);
 
             // not colinear
             if (diffCross1 > 1e-10 || diffCross1 < 0 - 1e-10 || diffCross2 > 1e-10 || diffCross2 < 0 - 1e-10) {
@@ -77,12 +78,12 @@ public class Segment {
 
 					// avoid divide by zero
 					if (other.Vector.X != 0) {
-						overlapStart = Math.Round(differenceVector1.X / other.Vector.X, 15);
-						overlapEnd = Math.Round(differenceVector2.X / other.Vector.X, 15);
+						overlapStart = Math.Round(differenceVector1.X / other.Vector.X, 13, MidpointRounding.ToEven);
+						overlapEnd = Math.Round(differenceVector2.X / other.Vector.X, 13, MidpointRounding.ToEven);
 					}
 					else if (other.Vector.Y != 0) {
-						overlapStart = Math.Round(differenceVector1.Y / other.Vector.Y, 15);
-						overlapEnd = Math.Round(differenceVector2.Y / other.Vector.Y, 15);
+						overlapStart = Math.Round(differenceVector1.Y / other.Vector.Y, 13, MidpointRounding.ToEven);
+						overlapEnd = Math.Round(differenceVector2.Y / other.Vector.Y, 13, MidpointRounding.ToEven);
 					}
 
 					// ensure small before large
@@ -114,7 +115,7 @@ public class Segment {
 			}
 		}
 		else {
-			var intersectWithThis = Math.Round(other.Vector.Cross(differenceVector1) / cross, 15);
+			var intersectWithThis = Math.Round(other.Vector.Cross(differenceVector1) / cross, 13, MidpointRounding.ToEven);
 
 			// confirmed intersection
 			if (intersectWithThis >= 0 && intersectWithThis <= 1) {
@@ -134,16 +135,18 @@ public class Segment {
 
     public double AngleTo(Segment other) {
 		var value = Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude);
-		
-		// Remove imprecision introduced in doubles math.
-		if (value > 1 && value < 1 + 1E-15) {
-			value = 1;
-		}
+		value = Math.Round(value, 13, MidpointRounding.ToZero);
+
+		//// Remove imprecision introduced in doubles math.
+		//if (value > 1 && value < 1 + 1E-15) {
+		//	value = 1;
+		//}
         
 		var radians = Math.Acos(value);
+		var angleTo = Circle.FromRadians(radians);
 
         // Loss of precision due to doubles math.
-        return Math.Round(Circle.FromRadians(radians), 13);
+        return Math.Round(angleTo, 10, MidpointRounding.ToEven);
     }
 
     public bool Contains(Point point) => Math.Abs(Vector.Magnitude - ((point - Point1).Magnitude + (point - Point2).Magnitude)) < 1e-10;

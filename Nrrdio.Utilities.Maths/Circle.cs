@@ -115,13 +115,13 @@ public class Circle {
 		var aux2 = -(dA * (p2.X - p1.X) + dB * (p0.X - p2.X) + dC * (p1.X - p0.X));
 
 		var div = (2 * (p0.X * (p2.Y - p1.Y) + p1.X * (p0.Y - p2.Y) + p2.X * (p1.Y - p0.Y)));
-        var centerX = Math.Round(aux1 / div, 13);
-        var centerY = Math.Round(aux2 / div, 13);
+        var centerX = Math.Round(aux1 / div, 13, MidpointRounding.ToEven);
+        var centerY = Math.Round(aux2 / div, 13, MidpointRounding.ToEven);
 
         Center = new Point(centerX, centerY);
 		Radius = Math.Max(Math.Max(Center.Distance(p0), Center.Distance(p1)), Center.Distance(p2));
 	}
 
-    public static double ToRadians(double degrees) => Math.Round(Math.PI / 180 * degrees, 15);
-	public static double FromRadians(double radians) => Math.Round(radians * (180 / Math.PI), 15);
+    public static double ToRadians(double degrees) => Math.Round(Math.PI / 180 * degrees, 13, MidpointRounding.ToEven);
+	public static double FromRadians(double radians) => Math.Round(radians * (180 / Math.PI), 13, MidpointRounding.ToEven);
 }

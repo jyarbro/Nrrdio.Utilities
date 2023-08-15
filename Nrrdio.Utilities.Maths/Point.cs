@@ -11,11 +11,14 @@ public class Point : IComparable<Point> {
 	public Point() { }
 	public Point(Point other) : this(other.X, other.Y) { }
 	public Point(double x, double y) {
-		X = Math.Round(x, 15);
-		Y = Math.Round(y, 15);
+		X = Math.Round(x, 13, MidpointRounding.ToEven);
+		Y = Math.Round(y, 13, MidpointRounding.ToEven);
 
-		PhiAngle = Math.Round(Math.Atan2(Y, X), 15);
-        Magnitude = Math.Round(Math.Sqrt(X * X + Y * Y), 15);
+		var phiAngle = Math.Atan2(Y, X);
+        PhiAngle = Math.Round(phiAngle, 13, MidpointRounding.ToEven);
+		
+		var magnitude = Math.Sqrt(X * X + Y * Y);
+        Magnitude = Math.Round(magnitude, 13, MidpointRounding.ToEven);
     }
 
     public double Distance(Point other) => (this - other).Magnitude;
