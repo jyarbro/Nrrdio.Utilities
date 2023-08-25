@@ -48,6 +48,7 @@ public class Polygon {
 			}
 		}
 
+		// The point isn't inside the border but maybe on an edge
 		if (!contains) {
 			contains = Edges.Any(edge => edge.Contains(point));
 		}

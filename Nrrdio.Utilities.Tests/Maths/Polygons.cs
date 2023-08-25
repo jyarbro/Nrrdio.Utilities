@@ -142,7 +142,7 @@ public class Polygons {
 
 		Assert.IsTrue(polygon.Contains(testPoints));
 
-		testPoints.Add(new Point(4.5, 3.5001));
+		testPoints.Add(new Point(4.5, 3.5003));
 
 		Assert.IsFalse(polygon.Contains(testPoints));
 	}

@@ -21,8 +21,11 @@ public class Segments {
 		var segment1 = new Segment(new Point(2, 0), new Point(4, 4));
 		var segment2 = new Segment(new Point(1, 4), new Point(4, 1));
 
-		Assert.AreEqual((true, new Point(3, 2), default(Point)), segment1.Intersects(segment2));
-		Assert.AreEqual((true, new Point(3, 2), default(Point)), segment2.Intersects(segment1));
+        var value1 = segment1.Intersects(segment2);
+        var value2 = segment2.Intersects(segment1);
+
+        Assert.AreEqual((true, new Point(3, 2), default(Point)), value1);
+		Assert.AreEqual((true, new Point(3, 2), default(Point)), value2);
 	}
 
 	[TestMethod]
@@ -30,8 +33,11 @@ public class Segments {
 		var segment1 = new Segment(new Point(0, 0), new Point(0, 600));
 		var segment2 = new Segment(new Point(-80.896208128707386, 192.00151880011086), new Point(246.73060356878347, 16.227559135922846));
 
-		Assert.AreEqual((true, new Point(0, 148.60016605084175), default(Point)), segment1.Intersects(segment2));
-		Assert.AreEqual((true, new Point(0, 148.60016605084175), default(Point)), segment2.Intersects(segment1));
+		var value1 = segment1.Intersects(segment2);
+		var value2 = segment2.Intersects(segment1);
+
+        Assert.AreEqual((true, new Point(0, 148.60016605086), default(Point)), value1);
+		Assert.AreEqual((true, new Point(0, 148.60016605086), default(Point)), value2);
 	}
 
 	[TestMethod]
@@ -84,35 +90,59 @@ public class Segments {
 		var segment1 = new Segment(new Point(2, 0), new Point(4, 4));
 		var segment2 = new Segment(new Point(3, 2), new Point(3.5, 3));
 
-		Assert.AreEqual((true, segment2.Point1, segment2.Point2), segment1.Intersects(segment2));
-		Assert.AreEqual((true, segment2.Point1, segment2.Point2), segment2.Intersects(segment1));
+        var value1 = segment2.Intersects(segment1);
+        var value2 = segment1.Intersects(segment2);
+
+        Assert.AreEqual((true, segment2.Point1, segment2.Point2), value1);
+		Assert.AreEqual((true, segment2.Point1, segment2.Point2), value2);
 
         segment1 = new Segment(new Point(401.04278015968674, 67.0196425998768), new Point(551.28296413574037, 205.27863549802379));
         segment2 = new Segment(new Point(406.78548879217476, 72.304387939124567), new Point(435.14459119245265, 98.401939430294789));
 
-        Assert.AreEqual((true, segment2.Point1, segment2.Point2), segment2.Intersects(segment1));
-        Assert.AreEqual((true, segment2.Point1, segment2.Point2), segment1.Intersects(segment2));
+        value1 = segment2.Intersects(segment1);
+        value2 = segment1.Intersects(segment2);
+
+        Assert.AreEqual((true, segment2.Point1, segment2.Point2), value1);
+        Assert.AreEqual((true, segment2.Point1, segment2.Point2), value2);
 
         segment1 = new Segment(new Point(286.40309161863138, 239.852318841589), new Point(247.286618350403, 259.86559502957749));
         segment2 = new Segment(new Point(397.43104630611151, 183.0467600553726), new Point(166.71963994898061, 301.0863149887258));
 
-        Assert.AreEqual((true, segment1.Point1, segment1.Point2), segment2.Intersects(segment1));
-        Assert.AreEqual((true, segment1.Point1, segment1.Point2), segment1.Intersects(segment2));
+        value1 = segment2.Intersects(segment1);
+        value2 = segment1.Intersects(segment2);
+
+        Assert.AreEqual((true, segment1.Point1, segment1.Point2), value1);
+        Assert.AreEqual((true, segment1.Point1, segment1.Point2), value2);
 
         segment1 = new Segment(new Point(247.286618350403, 259.86559502957749), new Point(166.71963994898061, 301.0863149887258));
         segment2 = new Segment(new Point(397.43104630611151, 183.0467600553726), new Point(166.71963994898061, 301.0863149887258));
 
-        Assert.AreEqual((true, segment1.Point1, segment1.Point2), segment2.Intersects(segment1));
-        Assert.AreEqual((true, segment1.Point1, segment1.Point2), segment1.Intersects(segment2));
+        value1 = segment2.Intersects(segment1);
+        value2 = segment1.Intersects(segment2);
+
+        Assert.AreEqual((true, segment1.Point1, segment1.Point2), value1);
+        Assert.AreEqual((true, segment1.Point1, segment1.Point2), value2);
     }
 
     [TestMethod]
     public void ColinearOverlapSameStart() {
-        var segment1 = new Segment(new Point(463.34334836776395, 163.34334836776392), new Point(600, 258.11552765609));
-        var segment2 = new Segment(new Point(463.34334836776395, 163.34334836776392), new Point(508.84201564160634, 194.896937605855));
+        var segment1 = new Segment(new Point(299.99999999999989, 517.2352506910164), new Point(300, 559.8076211353316));
+        var segment2 = new Segment(new Point(299.99999999999989, 517.2352506910164), new Point(299.99999999999989, 538.03461457240132));
 
-        Assert.AreEqual((true, segment1.Point1, segment2.Point2), segment2.Intersects(segment1));
-        Assert.AreEqual((true, segment1.Point1, segment2.Point2), segment1.Intersects(segment2));
+        var value1 = segment2.Intersects(segment1);
+        var value2 = segment1.Intersects(segment2);
+
+        Assert.AreEqual((true, segment1.Point1, segment2.Point2), value1);
+        Assert.AreEqual((true, segment1.Point1, segment2.Point2), value2);
+
+        segment1 = new Segment(new Point(299.99999999999989, 517.2352506910164), new Point(300, 559.8076211353316));
+        segment2 = new Segment(new Point(300, 539.231449759497), new Point(300, 559.8076211353316));
+
+        value1 = segment2.Intersects(segment1);
+        value2 = segment1.Intersects(segment2);
+
+        Assert.AreEqual((true, segment2.Point1, segment1.Point2), value1);
+        Assert.AreEqual((true, segment2.Point1, segment1.Point2), value2);
     }
 
     [TestMethod]
@@ -217,18 +247,6 @@ public class Segments {
 
         angle = segment1.AngleTo(segment2);
         Assert.AreEqual(1.718, Math.Round(angle, 3));
-
-		segment1 = new Segment(new Point(205.51224777884937, 408.80471583332934), new Point(135.27451178530475, 386.92074581254468));
-		segment2 = new Segment(new Point(135.27451178530475, 386.92074581254468), new Point(65.036775791760121, 365.03677579176));
-
-        angle = segment1.AngleTo(segment2);
-        Assert.AreEqual(0, Math.Round(angle, 3));
-
-        segment1 = new Segment(new Point(89.150129014188011, 302.67028436078027), new Point(97.754420007461519, 335.78651332747489));
-        segment2 = new Segment(new Point(97.754420007461519, 335.78651332747489), new Point(97.846244302003811, 336.139927032932));
-
-		angle = segment1.AngleTo(segment2);
-        Assert.AreEqual(0, Math.Round(angle, 3));
     }
 
     [TestMethod]

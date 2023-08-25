@@ -11,14 +11,14 @@ public class Point : IComparable<Point> {
 	public Point() { }
 	public Point(Point other) : this(other.X, other.Y) { }
 	public Point(double x, double y) {
-		X = Math.Round(x, 13, MidpointRounding.ToEven);
-		Y = Math.Round(y, 13, MidpointRounding.ToEven);
+		X = x;
+		Y = y;
 
-		var phiAngle = Math.Atan2(Y, X);
-        PhiAngle = Math.Round(phiAngle, 13, MidpointRounding.ToEven);
+		var phiAngle = Math.Atan2(y, x);
+        PhiAngle = phiAngle;
 		
-		var magnitude = Math.Sqrt(X * X + Y * Y);
-        Magnitude = Math.Round(magnitude, 13, MidpointRounding.ToEven);
+		var magnitude = Math.Sqrt(x * x + y * y);
+        Magnitude = magnitude;
     }
 
     public double Distance(Point other) => (this - other).Magnitude;
@@ -52,13 +52,13 @@ public class Point : IComparable<Point> {
 		double lerp(double a, double b) => a * (1 - by) + b * by;
 	}
 
-	public static Point operator +(Point left, Point right) => new Point(left.X + right.X, left.Y + right.Y);
+	public static Point operator +(Point left, Point right) => new (left.X + right.X, left.Y + right.Y);
 
-	public static Point operator -(Point left, Point right) => new Point(left.X - right.X, left.Y - right.Y);
+	public static Point operator -(Point left, Point right) => new (left.X - right.X, left.Y - right.Y);
 	public static Point operator -(Point point) => new Point(point.X, point.Y) * -1;
 
-	public static Point operator *(Point point, double scalar) => new Point(point.X * scalar, point.Y * scalar);
-	public static Point operator *(double scalar, Point point) => new Point(point.X * scalar, point.Y * scalar);
+	public static Point operator *(Point point, double scalar) => new (point.X * scalar, point.Y * scalar);
+	public static Point operator *(double scalar, Point point) => new (point.X * scalar, point.Y * scalar);
 
 	public static bool operator ==(Point left, Point right) => Equals(left, right);
 	public static bool operator !=(Point left, Point right) => !Equals(left, right);

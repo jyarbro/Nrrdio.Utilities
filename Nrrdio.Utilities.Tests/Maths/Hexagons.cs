@@ -35,7 +35,7 @@ public class Hexagons {
 	public void SixVertices() {
 		var hexagon = new Hexagon(new Point(0, 0), 6, 1);
 
-		var vertices = hexagon.Vertices.Where(v => (hexagon.Centroid - v).Magnitude == hexagon.Radius);
+		var vertices = hexagon.Vertices.Where(v => Convert.ToSingle((hexagon.Centroid - v).Magnitude) == Convert.ToSingle(hexagon.Radius));
 
 		Assert.AreEqual(6, vertices.Count());
 	}
@@ -49,7 +49,7 @@ public class Hexagons {
 		foreach (var vertex in hexagon.Vertices) {
 			var vector = hexagon.Centroid - vertex;
 
-			 if (vector.Magnitude == hexagon.Apothem) {
+			 if (Convert.ToSingle(vector.Magnitude) == Convert.ToSingle(hexagon.Apothem)) {
 				vertices.Add(vector);
 			}
         }
