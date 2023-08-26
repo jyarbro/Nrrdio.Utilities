@@ -85,12 +85,16 @@ public class Points {
         Assert.IsTrue(new Point(-100, 0).LeftSideOfLine(line));
 
         // Rights
-        Assert.IsFalse(new Point(4, 2).NearLine(line) > 0);
-        Assert.IsFalse(new Point(4, 2).LeftSideOfLine(line));
-        Assert.IsFalse(new Point(9, 3).NearLine(line) > 0);
-        Assert.IsFalse(new Point(9, 3).LeftSideOfLine(line));
-        Assert.IsFalse(new Point(100, 0).NearLine(line) > 0);
-        Assert.IsFalse(new Point(100, 0).LeftSideOfLine(line));
+        Assert.IsTrue(new Point(4, 2).NearLine(line) < 0);
+        Assert.IsTrue(new Point(4, 2).RightSideOfLine(line));
+        Assert.IsTrue(new Point(9, 3).NearLine(line) < 0);
+        Assert.IsTrue(new Point(9, 3).RightSideOfLine(line));
+        Assert.IsTrue(new Point(100, 0).NearLine(line) < 0);
+        Assert.IsTrue(new Point(100, 0).RightSideOfLine(line));
+
+		// On the line
+        Assert.IsTrue(new Point(3, 5).NearLine(line) == 0);
+        Assert.IsTrue(new Point(3, 5).OnLine(line));
     }
 
     [TestMethod]

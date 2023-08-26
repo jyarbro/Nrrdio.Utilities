@@ -30,6 +30,8 @@ public class Point : IComparable<Point> {
 	/// </summary>
 	public double NearLine(Segment segment) => segment.Vector.Cross(this - segment.Point1);
     public bool LeftSideOfLine(Segment segment) => NearLine(segment) > 0;
+    public bool RightSideOfLine(Segment segment) => NearLine(segment) < 0;
+    public bool OnLine(Segment segment) => NearLine(segment) == 0;
 
     /// <summary>
     /// > 0 : This is on relative right of the other.
