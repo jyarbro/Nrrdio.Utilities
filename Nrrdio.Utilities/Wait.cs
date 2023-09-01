@@ -2,6 +2,8 @@
 
 public class Wait {
     public bool Continue { get; set; }
+    public bool Pause { get; set; }
+    public int Delay { get; set; }
 
     public async Task ForContinue() {
         Continue = false;
@@ -14,5 +16,14 @@ public class Wait {
         });
     }
 
-    public async Task For(int ms) => await Task.Delay(ms);
+    public async Task For(int ms) {
+        if (Pause) {
+            await ForContinue();
+        }
+        else {
+            await Task.Delay(ms);
+        }
+    }
+
+    public async Task ForDelay() => await For(Delay);
 }
