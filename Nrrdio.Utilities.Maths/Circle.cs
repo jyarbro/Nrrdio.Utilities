@@ -74,34 +74,51 @@ public class Circle {
 		return Center.Distance(point) <= Radius;
 	}
 
-	public Polygon ToPolygon(int sides = 3) {
+	public Polygon ToPolygon(int sides = 3, int segmentsPerSide = 1) {
 		if (sides < 3) {
 			throw new ArgumentException("Requires at least 3 sides");
 		}
 
-		var spacing = Math.PI * 2d / sides;
+        if (segmentsPerSide < 1) {
+            throw new ArgumentException("Requires at least 1 segment per side");
+        }
 
-		double x;
+		var spacing = Math.PI * 2d / sides;
+        var lerpBy = 1d / segmentsPerSide;
+
+        double x;
 		double y;
 		Point point;
 		Point offset;
+        Point previousPoint = default;
 
 		var points = new List<Point>();
 
 		var theta = 0d;
 
-        for (var i = 0; i < sides; i++) {
+        for (var i = 0; i <= sides; i++) {
 			x = Radius * Math.Cos(theta);
 			y = Radius * Math.Sin(theta);
 			theta += spacing;
 
 			offset = new Point(x, y);
 			point = Center + offset;
-			points.Add(point);
+
+            if (previousPoint is not null) {
+                addSegmentedSide(previousPoint, point);
+            }
+
+            previousPoint = point;
 		}
 
 		return new Polygon(points);
-	}
+
+        void addSegmentedSide(Point sideVertex1, Point sideVertex2) {
+            for (var i = 0; i < segmentsPerSide; i++) {
+                points.Add(sideVertex1.Lerp(sideVertex2, lerpBy * i));
+            }
+        }
+    }
 
 	void FromCircumcircle(Point p0, Point p1, Point p2) {
 		// https://codefound.wordpress.com/2013/02/21/how-to-compute-a-circumcircle/#more-58
