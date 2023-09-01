@@ -13,6 +13,8 @@ public class Wait {
                 // 80ms after a click feels pretty snappy but doesn't bog down the machine with a loop.
                 Thread.Sleep(80);
             }
+
+            Continue = false;
         });
     }
 
