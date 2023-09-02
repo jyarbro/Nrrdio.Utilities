@@ -24,9 +24,16 @@ public class Segments {
 
         Assert.AreEqual((true, new Point(3, 2), default(Point)), value1);
 		Assert.AreEqual((true, new Point(3, 2), default(Point)), value2);
-	}
 
-	[TestMethod]
+        segment1 = new Segment(new Point(3, 2), new Point(3, 2));
+        value1 = segment1.Intersects(segment2);
+        value2 = segment2.Intersects(segment1);
+
+        Assert.AreEqual((true, new Point(3, 2), default(Point)), value1);
+        Assert.AreEqual((true, new Point(3, 2), default(Point)), value2);
+    }
+
+    [TestMethod]
 	public void LargeVerticalIntersects() {
 		var segment1 = new Segment(new Point(0, 0), new Point(0, 600));
 		var segment2 = new Segment(new Point(-80.896208128707386, 192.00151880011086), new Point(246.73060356878347, 16.227559135922846));
