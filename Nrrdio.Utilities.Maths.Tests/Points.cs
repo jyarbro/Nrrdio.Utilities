@@ -1,6 +1,4 @@
-using Nrrdio.Utilities.Maths;
-
-namespace Nrrdio.Utilities.Tests;
+namespace Nrrdio.Utilities.Maths.Tests;
 
 [TestClass]
 public class Points {

@@ -71,7 +71,7 @@ public class Point : IComparable<Point> {
 	public int CompareTo(Point other) => PhiAngle.CompareTo(other.PhiAngle);
 
 	public override int GetHashCode() => X.GetHashCode() ^ Y.GetHashCode() << 2;
-	public override string ToString() => $"{nameof(Point)} ({X:0.###}, {Y:0.###})";
+	public override string ToString() => $"({X:0.###}, {Y:0.###})";
 }
 
 public static class PointExtensions {
