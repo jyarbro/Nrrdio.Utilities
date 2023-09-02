@@ -112,19 +112,16 @@ public class Segment {
 			}
 		}
 		else {
-			var intersectWithThis = Math.Round(other.Vector.Cross(differenceVector1) / cross, 13, MidpointRounding.ToEven);
+			var intersectWithThis = other.Vector.Cross(differenceVector1) / cross;
 
 			// confirmed intersection
 			if (intersectWithThis >= 0 && intersectWithThis <= 1) {
 				var lineIntersection = Point1 + intersectWithThis * Vector;
-                var thisContains = Contains(lineIntersection);
-                var otherContains = other.Contains(lineIntersection);
 
-                //var thisContains = lineIntersection.NearLine(this);
-                //var otherContains = lineIntersection.NearLine(other);
+                var onThisLine = Contains(lineIntersection);
+                var onOtherLine = other.Contains(lineIntersection);
 
-                if (thisContains && otherContains) {
-                //if (thisContains == 0 && otherContains == 0) {
+                if (onThisLine && onOtherLine) {
 					intersects = true;
 					intersection = Point1 + intersectWithThis * Vector;
 				}

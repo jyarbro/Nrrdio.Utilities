@@ -1,8 +1,35 @@
-﻿namespace Nrrdio.Utilities.Maths.Tests;
+﻿using System.Diagnostics;
+
+namespace Nrrdio.Utilities.Maths.Tests;
 
 [TestClass]
 public class Segments {
-	[TestMethod]
+    // NearLine can be useful when dealing with lines instead of segments.
+    [TestMethod]
+    public void Performance_ContainsVsNearLine() {
+        var timer = new Stopwatch();
+
+        var segment1 = new Segment(new Point(2, 0), new Point(4, 4));
+        var point1 = new Point(3, 2);
+
+        timer.Start();
+        for (var i = 0; i < 1000000; i++) {
+            _ = segment1.Contains(point1);
+        }
+        timer.Stop();
+
+        Console.WriteLine($"Contains took {timer.ElapsedMilliseconds} milliseconds");
+        
+        timer.Restart();
+        for (var i = 0; i < 1000000; i++) {
+            _ = point1.NearLine(segment1) == 0;
+        }
+        timer.Stop();
+
+        Console.WriteLine($"NearLine took {timer.ElapsedMilliseconds} milliseconds");
+    }
+
+    [TestMethod]
 	public void Equality() {
 		var segment1 = new Segment(new Point(2, 0), new Point(4, 4));
 		var segment2 = new Segment(new Point(2, 0), new Point(4, 4));
@@ -50,8 +77,11 @@ public class Segments {
 		var segment1 = new Segment(new Point(1, -2), new Point(2.5, 1));
 		var segment2 = new Segment(new Point(1, 4), new Point(4, 1));
 
-		Assert.AreEqual((false, default(Point), default(Point)), segment1.Intersects(segment2));
-		Assert.AreEqual((false, default(Point), default(Point)), segment2.Intersects(segment1));
+        var value1 = segment1.Intersects(segment2);
+        var value2 = segment2.Intersects(segment1);
+
+        Assert.AreEqual((false, default(Point), default(Point)), value1);
+        Assert.AreEqual((false, default(Point), default(Point)), value2);
 	}
 
 	[TestMethod]

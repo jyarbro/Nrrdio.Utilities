@@ -28,16 +28,11 @@ public class Point : IComparable<Point> {
 	/// = 0 : point is on the line
 	/// < 0 : point is to the relative right of the line
 	/// </summary>
-	public double NearLine(Segment segment) => segment.Vector.Cross(this - segment.Point1);
+	public float NearLine(Segment segment) => Convert.ToSingle(segment.Vector.Cross(this - segment.Point1));
     public bool LeftSideOfLine(Segment segment) => NearLine(segment) > 0;
     public bool RightSideOfLine(Segment segment) => NearLine(segment) < 0;
     public bool OnLine(Segment segment) => NearLine(segment) == 0;
 
-    /// <summary>
-    /// > 0 : This is on relative right of the other.
-    /// = 0 : Overlapping
-    /// < 0 : This is on relative left of the other.
-    /// </summary>
     public double Cross(Point other) => X * other.Y - Y * other.X;
 
 	/// <summary>
