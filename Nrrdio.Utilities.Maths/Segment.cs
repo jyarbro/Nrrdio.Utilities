@@ -133,13 +133,14 @@ public class Segment {
 
 	public double Cross(Point point) => Vector.Cross(point - Point1);
 
-    public double AngleTo(Segment other) {
-		var value = Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude);
+    public float AngleTo(Segment other) {
+        // This tries to make sure that floating point errors don't give a >1 value on colinear segments.
+		var value = Math.Round(Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude), 13, MidpointRounding.ToEven);
 
 		var radians = Math.Acos(value);
 		var angleTo = Circle.FromRadians(radians);
 
-        return angleTo;
+        return Convert.ToSingle(Math.Round(angleTo, 7, MidpointRounding.ToEven));
     }
 
     public bool Contains(Point point) => Math.Round(Math.Abs(Vector.Magnitude - ((point - Point1).Magnitude + (point - Point2).Magnitude)), 7, MidpointRounding.ToEven) == 0;
