@@ -164,6 +164,6 @@ public class Circle {
 		Radius = Math.Max(Math.Max(Center.Distance(p0), Center.Distance(p1)), Center.Distance(p2));
 	}
 
-    public static double ToRadians(double degrees) => Math.Round(Math.PI / 180 * degrees, 13, MidpointRounding.ToEven);
-	public static double FromRadians(double radians) => Math.Round(radians * (180 / Math.PI), 13, MidpointRounding.ToEven);
+    public static float ToRadians(double degrees) => Convert.ToSingle(Math.Round(Math.PI / 180 * degrees, 7, MidpointRounding.ToEven));
+	public static float FromRadians(double radians) => Convert.ToSingle(Math.Round(radians * (180 / Math.PI), 7, MidpointRounding.ToEven));
 }

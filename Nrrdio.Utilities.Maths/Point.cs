@@ -7,18 +7,17 @@ public class Point : IComparable<Point> {
 	// https://en.wikipedia.org/wiki/Polar_coordinate_system
 	public double PhiAngle { get; protected init; }
 	public double Magnitude { get; protected init; }
+	public double Magnitude2 { get; protected init; }
 
-	public Point() { }
+    public Point() { }
 	public Point(Point other) : this(other.X, other.Y) { }
 	public Point(double x, double y) {
 		X = x;
 		Y = y;
 
-		var phiAngle = Math.Atan2(y, x);
-        PhiAngle = phiAngle;
-		
-		var magnitude = Math.Sqrt(x * x + y * y);
-        Magnitude = magnitude;
+        PhiAngle = Math.Atan2(y, x);
+        Magnitude2 = x * x + y * y;
+        Magnitude = Math.Sqrt(Magnitude2);
     }
 
     public double Distance(Point other) => (this - other).Magnitude;
@@ -40,24 +39,31 @@ public class Point : IComparable<Point> {
 	/// </summary>
 	public double Dot(Point other) => X * other.X + Y * other.Y;
 
-	public Point Lerp(Point other, double by) {
-		var x = lerp(X, other.X);
-		var y = lerp(Y, other.Y);
+    /// <summary>
+    /// Unclamped lerp
+    /// </summary>
+    public Point Lerp(Point other, double by) => this + (other - this) * by;
 
-		return new Point(x, y);
-
-		double lerp(double a, double b) => a * (1 - by) + b * by;
-	}
-
-	public static Point operator +(Point left, Point right) => new (left.X + right.X, left.Y + right.Y);
+    public static Point operator +(Point left, Point right) => new (left.X + right.X, left.Y + right.Y);
 
 	public static Point operator -(Point left, Point right) => new (left.X - right.X, left.Y - right.Y);
 	public static Point operator -(Point point) => new Point(point.X, point.Y) * -1;
 
 	public static Point operator *(Point point, double scalar) => new (point.X * scalar, point.Y * scalar);
+	public static Point operator *(Point point, float scalar) => new (point.X * scalar, point.Y * scalar);
+	public static Point operator *(Point point, int scalar) => new (point.X * scalar, point.Y * scalar);
 	public static Point operator *(double scalar, Point point) => new (point.X * scalar, point.Y * scalar);
+	public static Point operator *(float scalar, Point point) => new (point.X * scalar, point.Y * scalar);
+	public static Point operator *(int scalar, Point point) => new (point.X * scalar, point.Y * scalar);
 
-	public static bool operator ==(Point left, Point right) => Equals(left, right);
+    public static Point operator /(Point point, double scalar) => new(point.X / scalar, point.Y / scalar);
+    public static Point operator /(Point point, float scalar) => new(point.X / scalar, point.Y / scalar);
+    public static Point operator /(Point point, int scalar) => new(point.X / scalar, point.Y / scalar);
+    public static Point operator /(double scalar, Point point) => new(point.X / scalar, point.Y / scalar);
+    public static Point operator /(float scalar, Point point) => new(point.X / scalar, point.Y / scalar);
+    public static Point operator /(int scalar, Point point) => new(point.X / scalar, point.Y / scalar);
+
+    public static bool operator ==(Point left, Point right) => Equals(left, right);
 	public static bool operator !=(Point left, Point right) => !Equals(left, right);
 
 	public override bool Equals(object obj) => (obj is Point other) && Equals(other);
