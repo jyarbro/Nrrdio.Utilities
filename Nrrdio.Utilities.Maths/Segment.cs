@@ -138,7 +138,7 @@ public class Segment {
 		var value = Math.Round(Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude), 13, MidpointRounding.ToEven);
 
 		var radians = Math.Acos(value);
-		var angleTo = Circle.FromRadians(radians);
+		var angleTo = Formula.RadiansToDegrees(radians);
 
         return Convert.ToSingle(Math.Round(angleTo, 7, MidpointRounding.ToEven));
     }

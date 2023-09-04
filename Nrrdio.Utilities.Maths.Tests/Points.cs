@@ -124,9 +124,10 @@ public class Points {
 
 		Assert.AreEqual(new Point(3, 2), point1.Lerp(point2, 0.5));
 		Assert.AreEqual(new Point(3.5, 3), point1.Lerp(point2, 0.75));
-	}
+		Assert.AreEqual(new Point(5, 6), point1.Lerp(point2, 1.5));
+    }
 
-	[TestMethod]
+    [TestMethod]
 	public void Sort() {
 		var points = new List<Point> {
 				new Point(4, 4),

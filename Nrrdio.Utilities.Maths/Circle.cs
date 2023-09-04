@@ -65,12 +65,12 @@ public class Circle {
 
 	public Polygon SuperTriangle() {
 		// relative vectors
-		var mp1x = Radius * Math.Cos(ToRadians(60d));
-		var mp1y = Radius * Math.Sin(ToRadians(60d));
-		var mp2x = Radius * Math.Cos(ToRadians(180d));
-		var mp2y = Radius * Math.Sin(ToRadians(180d));
-		var mp3x = Radius * Math.Cos(ToRadians(300d));
-		var mp3y = Radius * Math.Sin(ToRadians(300d));
+		var mp1x = Radius * Math.Cos(Formula.DegreesToRadians(60d));
+		var mp1y = Radius * Math.Sin(Formula.DegreesToRadians(60d));
+		var mp2x = Radius * Math.Cos(Formula.DegreesToRadians(180d));
+		var mp2y = Radius * Math.Sin(Formula.DegreesToRadians(180d));
+		var mp3x = Radius * Math.Cos(Formula.DegreesToRadians(300d));
+		var mp3y = Radius * Math.Sin(Formula.DegreesToRadians(300d));
 
 		// midpoints
 		var mp1 = Center + new Point(mp1x, mp1y);
@@ -92,11 +92,9 @@ public class Circle {
 		return new Polygon(point1, point2, point3);
 	}
 
-	public bool Contains(Point point) {
-		return Center.Distance(point) <= Radius;
-	}
+    public bool Contains(Point point) => Center.Distance(point) <= Radius;
 
-	public Polygon ToPolygon(int sides = 3, int segmentsPerSide = 1) {
+    public Polygon ToPolygon(int sides = 3, int segmentsPerSide = 1) {
 		if (sides < 3) {
 			throw new ArgumentException("Requires at least 3 sides");
 		}
@@ -163,7 +161,4 @@ public class Circle {
         Center = new Point(centerX, centerY);
 		Radius = Math.Max(Math.Max(Center.Distance(p0), Center.Distance(p1)), Center.Distance(p2));
 	}
-
-    public static float ToRadians(double degrees) => Convert.ToSingle(Math.Round(Math.PI / 180 * degrees, 7, MidpointRounding.ToEven));
-	public static float FromRadians(double radians) => Convert.ToSingle(Math.Round(radians * (180 / Math.PI), 7, MidpointRounding.ToEven));
 }
