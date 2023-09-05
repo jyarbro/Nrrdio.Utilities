@@ -8,6 +8,16 @@ public class Point : IComparable<Point> {
 	public double PhiAngle { get; protected init; }
 	public double Magnitude { get; protected init; }
 	public double Magnitude2 { get; protected init; }
+    public Point Normalized {
+        get {
+            if (Magnitude == 0) {
+                return new Point(0, 0);
+            }
+            else {
+                return new Point(X / Magnitude, Y / Magnitude);
+            }
+        }
+    }
 
     public Point() { }
 	public Point(Point other) : this(other.X, other.Y) { }
