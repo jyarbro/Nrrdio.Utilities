@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Nrrdio.Utilities.Maths;
+﻿namespace Nrrdio.Utilities.Maths;
 
 /// <summary>
 /// Creates a catmull-rom spline without loops or self-intersections.
