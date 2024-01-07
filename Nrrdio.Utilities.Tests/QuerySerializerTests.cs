@@ -1,6 +1,6 @@
 using Nrrdio.Utilities.Web.Requests;
 
-namespace Nrrdio.Utilities.Tests;
+namespace Nrrdio.Utilities.Web.Tests;
 
 [TestClass]
 public class QuerySerializerTests {

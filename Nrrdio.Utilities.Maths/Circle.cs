@@ -1,4 +1,6 @@
-﻿namespace Nrrdio.Utilities.Maths;
+﻿using System.Diagnostics;
+
+namespace Nrrdio.Utilities.Maths;
 
 public class Circle {
 	public Point Center { get; private set; }
@@ -32,23 +34,43 @@ public class Circle {
 		}
 		else {
 			// Copy the list so we don't mess up the order.
-			var circlePoints = new List<Point>(points);
+			var circlePoints = new List<Point>(points.Distinct());
 
-			// Take the 3 points with the highest magnitude from a centroid and ignore all the internal points. This helps with generating circumcircles.
-			circlePoints = circlePoints.OrderByDescending(p => (centroid - p).Magnitude).Take(3).ToList();
+			// Take the 3 furthest points from a centroid and ignore all the internal points. This helps with generating circumcircles.
+			circlePoints = circlePoints.OrderByDescending(p => centroid.Distance(p)).ToList();
 
-			FromCircumcircle(circlePoints[0], circlePoints[1], circlePoints[2]);
+            var colinear = true;
+
+            // Degenerate case: All 3 furthest points are colinear
+            while (colinear) {
+                // The first two points are naturally the furthest, so check the 3rd point for colinearity
+                var segment = new Segment(circlePoints[0], circlePoints[1]);
+                var nearLine = circlePoints[2].NearLine(segment);
+
+                if (circlePoints[2].OnLine(segment)) {
+                    circlePoints.RemoveAt(2);
+                }
+                else {
+                    colinear = false;
+                }
+
+                if (circlePoints.Count < 3) {
+                    throw new Exception("Too many points were colinear");
+                }
+            }
+
+            FromCircumcircle(circlePoints[0], circlePoints[1], circlePoints[2]);
 		}
 	}
 
 	public Polygon SuperTriangle() {
 		// relative vectors
-		var mp1x = Radius * Math.Cos(ToRadians(60d));
-		var mp1y = Radius * Math.Sin(ToRadians(60d));
-		var mp2x = Radius * Math.Cos(ToRadians(180d));
-		var mp2y = Radius * Math.Sin(ToRadians(180d));
-		var mp3x = Radius * Math.Cos(ToRadians(300d));
-		var mp3y = Radius * Math.Sin(ToRadians(300d));
+		var mp1x = Radius * Math.Cos(Formula.DegreesToRadians(60d));
+		var mp1y = Radius * Math.Sin(Formula.DegreesToRadians(60d));
+		var mp2x = Radius * Math.Cos(Formula.DegreesToRadians(180d));
+		var mp2y = Radius * Math.Sin(Formula.DegreesToRadians(180d));
+		var mp3x = Radius * Math.Cos(Formula.DegreesToRadians(300d));
+		var mp3y = Radius * Math.Sin(Formula.DegreesToRadians(300d));
 
 		// midpoints
 		var mp1 = Center + new Point(mp1x, mp1y);
@@ -70,38 +92,53 @@ public class Circle {
 		return new Polygon(point1, point2, point3);
 	}
 
-	public bool Contains(Point point) {
-		return Center.Distance(point) <= Radius;
-	}
+    public bool Contains(Point point) => Center.Distance(point) <= Radius;
 
-	public Polygon ToPolygon(int sides = 3) {
+    public Polygon ToPolygon(int sides = 3, int segmentsPerSide = 1) {
 		if (sides < 3) {
 			throw new ArgumentException("Requires at least 3 sides");
 		}
 
-		var spacing = Math.PI * 2d / sides;
+        if (segmentsPerSide < 1) {
+            throw new ArgumentException("Requires at least 1 segment per side");
+        }
 
-		double x;
+		var spacing = Math.PI * 2d / sides;
+        var lerpBy = 1d / segmentsPerSide;
+
+        double x;
 		double y;
 		Point point;
 		Point offset;
+        Point previousPoint = default;
 
 		var points = new List<Point>();
 
 		var theta = 0d;
 
-        for (var i = 0; i < sides; i++) {
+        for (var i = 0; i <= sides; i++) {
 			x = Radius * Math.Cos(theta);
 			y = Radius * Math.Sin(theta);
 			theta += spacing;
 
 			offset = new Point(x, y);
 			point = Center + offset;
-			points.Add(point);
+
+            if (previousPoint is not null) {
+                addSegmentedSide(previousPoint, point);
+            }
+
+            previousPoint = point;
 		}
 
 		return new Polygon(points);
-	}
+
+        void addSegmentedSide(Point sideVertex1, Point sideVertex2) {
+            for (var i = 0; i < segmentsPerSide; i++) {
+                points.Add(sideVertex1.Lerp(sideVertex2, lerpBy * i));
+            }
+        }
+    }
 
 	void FromCircumcircle(Point p0, Point p1, Point p2) {
 		// https://codefound.wordpress.com/2013/02/21/how-to-compute-a-circumcircle/#more-58
@@ -115,13 +152,13 @@ public class Circle {
 		var aux2 = -(dA * (p2.X - p1.X) + dB * (p0.X - p2.X) + dC * (p1.X - p0.X));
 
 		var div = (2 * (p0.X * (p2.Y - p1.Y) + p1.X * (p0.Y - p2.Y) + p2.X * (p1.Y - p0.Y)));
-        var centerX = Math.Round(aux1 / div, 13, MidpointRounding.ToEven);
-        var centerY = Math.Round(aux2 / div, 13, MidpointRounding.ToEven);
+
+        Debug.Assert(div != 0, "All 3 points are colinear");
+
+        var centerX = aux1 / div;
+        var centerY = aux2 / div;
 
         Center = new Point(centerX, centerY);
 		Radius = Math.Max(Math.Max(Center.Distance(p0), Center.Distance(p1)), Center.Distance(p2));
 	}
-
-    public static double ToRadians(double degrees) => Math.Round(Math.PI / 180 * degrees, 13, MidpointRounding.ToEven);
-	public static double FromRadians(double radians) => Math.Round(radians * (180 / Math.PI), 13, MidpointRounding.ToEven);
 }

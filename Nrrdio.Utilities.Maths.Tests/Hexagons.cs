@@ -1,7 +1,4 @@
-﻿using Nrrdio.Utilities.Maths;
-using System.Net;
-
-namespace Nrrdio.Utilities.Tests;
+﻿namespace Nrrdio.Utilities.Maths.Tests;
 
 [TestClass]
 public class Hexagons {

@@ -7,18 +7,27 @@ public class Point : IComparable<Point> {
 	// https://en.wikipedia.org/wiki/Polar_coordinate_system
 	public double PhiAngle { get; protected init; }
 	public double Magnitude { get; protected init; }
+	public double Magnitude2 { get; protected init; }
+    public Point Normalized {
+        get {
+            if (Magnitude == 0) {
+                return new Point(0, 0);
+            }
+            else {
+                return new Point(X / Magnitude, Y / Magnitude);
+            }
+        }
+    }
 
-	public Point() { }
+    public Point() { }
 	public Point(Point other) : this(other.X, other.Y) { }
 	public Point(double x, double y) {
 		X = x;
 		Y = y;
 
-		var phiAngle = Math.Atan2(y, x);
-        PhiAngle = phiAngle;
-		
-		var magnitude = Math.Sqrt(x * x + y * y);
-        Magnitude = magnitude;
+        PhiAngle = Math.Atan2(y, x);
+        Magnitude2 = x * x + y * y;
+        Magnitude = Math.Sqrt(Magnitude2);
     }
 
     public double Distance(Point other) => (this - other).Magnitude;
@@ -28,16 +37,11 @@ public class Point : IComparable<Point> {
 	/// = 0 : point is on the line
 	/// < 0 : point is to the relative right of the line
 	/// </summary>
-	public double NearLine(Segment segment) => segment.Vector.Cross(this - segment.Point1);
+	public float NearLine(Segment segment) => Convert.ToSingle(Math.Round(segment.Vector.Cross(this - segment.Point1), 7, MidpointRounding.ToEven));
     public bool LeftSideOfLine(Segment segment) => NearLine(segment) > 0;
     public bool RightSideOfLine(Segment segment) => NearLine(segment) < 0;
     public bool OnLine(Segment segment) => NearLine(segment) == 0;
 
-    /// <summary>
-    /// > 0 : This is on relative right of the other.
-    /// = 0 : Overlapping
-    /// < 0 : This is on relative left of the other.
-    /// </summary>
     public double Cross(Point other) => X * other.Y - Y * other.X;
 
 	/// <summary>
@@ -45,24 +49,31 @@ public class Point : IComparable<Point> {
 	/// </summary>
 	public double Dot(Point other) => X * other.X + Y * other.Y;
 
-	public Point Lerp(Point other, double by) {
-		var x = lerp(X, other.X);
-		var y = lerp(Y, other.Y);
+    /// <summary>
+    /// Unclamped lerp
+    /// </summary>
+    public Point Lerp(Point other, double by) => this + (other - this) * by;
 
-		return new Point(x, y);
-
-		double lerp(double a, double b) => a * (1 - by) + b * by;
-	}
-
-	public static Point operator +(Point left, Point right) => new (left.X + right.X, left.Y + right.Y);
+    public static Point operator +(Point left, Point right) => new (left.X + right.X, left.Y + right.Y);
 
 	public static Point operator -(Point left, Point right) => new (left.X - right.X, left.Y - right.Y);
 	public static Point operator -(Point point) => new Point(point.X, point.Y) * -1;
 
 	public static Point operator *(Point point, double scalar) => new (point.X * scalar, point.Y * scalar);
+	public static Point operator *(Point point, float scalar) => new (point.X * scalar, point.Y * scalar);
+	public static Point operator *(Point point, int scalar) => new (point.X * scalar, point.Y * scalar);
 	public static Point operator *(double scalar, Point point) => new (point.X * scalar, point.Y * scalar);
+	public static Point operator *(float scalar, Point point) => new (point.X * scalar, point.Y * scalar);
+	public static Point operator *(int scalar, Point point) => new (point.X * scalar, point.Y * scalar);
 
-	public static bool operator ==(Point left, Point right) => Equals(left, right);
+    public static Point operator /(Point point, double scalar) => new(point.X / scalar, point.Y / scalar);
+    public static Point operator /(Point point, float scalar) => new(point.X / scalar, point.Y / scalar);
+    public static Point operator /(Point point, int scalar) => new(point.X / scalar, point.Y / scalar);
+    public static Point operator /(double scalar, Point point) => new(point.X / scalar, point.Y / scalar);
+    public static Point operator /(float scalar, Point point) => new(point.X / scalar, point.Y / scalar);
+    public static Point operator /(int scalar, Point point) => new(point.X / scalar, point.Y / scalar);
+
+    public static bool operator ==(Point left, Point right) => Equals(left, right);
 	public static bool operator !=(Point left, Point right) => !Equals(left, right);
 
 	public override bool Equals(object obj) => (obj is Point other) && Equals(other);
@@ -71,7 +82,7 @@ public class Point : IComparable<Point> {
 	public int CompareTo(Point other) => PhiAngle.CompareTo(other.PhiAngle);
 
 	public override int GetHashCode() => X.GetHashCode() ^ Y.GetHashCode() << 2;
-	public override string ToString() => $"{nameof(Point)} ({X:0.###}, {Y:0.###})";
+	public override string ToString() => $"({X:0.###}, {Y:0.###})";
 }
 
 public static class PointExtensions {

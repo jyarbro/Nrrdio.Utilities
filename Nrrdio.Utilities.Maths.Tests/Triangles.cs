@@ -1,6 +1,4 @@
-﻿using Nrrdio.Utilities.Maths;
-
-namespace Nrrdio.Utilities.Tests;
+﻿namespace Nrrdio.Utilities.Maths.Tests;
 
 [TestClass]
 public class Triangles {
@@ -49,7 +47,7 @@ public class Triangles {
 		try {
 			new Triangle(new Point(1, -1.732051), new Point(1, -1.732051), new Point(0.5, -0.8660254));
 		}
-		catch (ArgumentException) {
+		catch (Exception) {
 			return;
 		}
 

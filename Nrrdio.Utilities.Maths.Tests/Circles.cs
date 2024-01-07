@@ -1,11 +1,25 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nrrdio.Utilities.Maths;
-
-namespace Nrrdio.Utilities.Tests;
+﻿namespace Nrrdio.Utilities.Maths.Tests;
 
 [TestClass]
 public class Circles {
-	[TestMethod]
+    [TestMethod]
+    public void FromPointsWhereThreeAreColinear() {
+        var centroid = new Point(493.15355408035782, 479.83073386567105);
+
+        var points = new List<Point> {
+            new Point(500, 473.2050807568877),
+            new Point(488.03871928527934, 493.9226266783777),
+            new Point(489.5854990797751, 475.54530826018879),
+            new Point(501.83644387599566, 470.02426665841449),
+        };
+
+        var circle = new Circle(points, centroid);
+
+        // Radius is infinity if this is done incorrectly
+        Assert.IsTrue(double.IsNormal(circle.Radius));
+    }
+
+    [TestMethod]
 	public void RectangleCenter() {
 		var points = new List<Point> {
 				new Point(2, 0),
@@ -103,7 +117,7 @@ public class Circles {
 
 	[TestMethod]
 	public void ToShapes() {
-		for (int i = 3; i < 30; i++) {
+		for (var i = 3; i < 30; i++) {
             var circle = new Circle(new Point(300, 300), 300).ToPolygon(i);
             Assert.AreEqual(i, circle.Vertices.Count);
         }

@@ -1,9 +1,9 @@
 ﻿namespace Nrrdio.Utilities.Maths;
 
 public class Formula {
-	// Based on Unity Standard Assets
-	// https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline
-	public static Point CatmullRom(Point p0, Point p1, Point p2, Point p3, double i) {
-		return 0.5 * ((2.0 * p1) + (-p0 + p2) * i + (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * (i * i) + (-p0 + 3.0 * p1 - 3.0 * p2 + p3) * (i * i * i));
-	}
+    // Unclamped lerp implementation
+    public static double Lerp(double a, double b, double t) => a + (b - a) * t;
+    public static float DegreesToRadians(double degrees) => Convert.ToSingle(Math.Round(Math.PI / 180 * degrees, 7, MidpointRounding.ToEven));
+    public static float RadiansToDegrees(double radians) => Convert.ToSingle(Math.Round(radians * (180 / Math.PI), 7, MidpointRounding.ToEven));
+
 }

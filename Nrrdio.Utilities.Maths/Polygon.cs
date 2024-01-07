@@ -194,7 +194,7 @@ public class Polygon {
 
 		return hashCode;
 	}
-	public override string ToString() => $"{nameof(Polygon)} [{string.Join("], [", Vertices)}]";
+	public override string ToString() => $"{Edges.Count} sides";
 
 	public enum EWinding {
 		CLOCKWISE, COUNTERCLOCKWISE, NONE

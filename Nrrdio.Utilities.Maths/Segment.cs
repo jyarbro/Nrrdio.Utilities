@@ -112,19 +112,16 @@ public class Segment {
 			}
 		}
 		else {
-			var intersectWithThis = Math.Round(other.Vector.Cross(differenceVector1) / cross, 13, MidpointRounding.ToEven);
+			var intersectWithThis = other.Vector.Cross(differenceVector1) / cross;
 
 			// confirmed intersection
 			if (intersectWithThis >= 0 && intersectWithThis <= 1) {
 				var lineIntersection = Point1 + intersectWithThis * Vector;
-                var thisContains = Contains(lineIntersection);
-                var otherContains = other.Contains(lineIntersection);
 
-                //var thisContains = lineIntersection.NearLine(this);
-                //var otherContains = lineIntersection.NearLine(other);
+                var onThisLine = Contains(lineIntersection);
+                var onOtherLine = other.Contains(lineIntersection);
 
-                if (thisContains && otherContains) {
-                //if (thisContains == 0 && otherContains == 0) {
+                if (onThisLine && onOtherLine) {
 					intersects = true;
 					intersection = Point1 + intersectWithThis * Vector;
 				}
@@ -136,13 +133,14 @@ public class Segment {
 
 	public double Cross(Point point) => Vector.Cross(point - Point1);
 
-    public double AngleTo(Segment other) {
-		var value = Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude);
+    public float AngleTo(Segment other) {
+        // This tries to make sure that floating point errors don't give a >1 value on colinear segments.
+		var value = Math.Round(Vector.Dot(other.Vector) / (Vector.Magnitude * other.Vector.Magnitude), 13, MidpointRounding.ToEven);
 
 		var radians = Math.Acos(value);
-		var angleTo = Circle.FromRadians(radians);
+		var angleTo = Formula.RadiansToDegrees(radians);
 
-        return angleTo;
+        return Convert.ToSingle(Math.Round(angleTo, 7, MidpointRounding.ToEven));
     }
 
     public bool Contains(Point point) => Math.Round(Math.Abs(Vector.Magnitude - ((point - Point1).Magnitude + (point - Point2).Magnitude)), 7, MidpointRounding.ToEven) == 0;
@@ -159,5 +157,5 @@ public class Segment {
     public static bool Equals(Segment left, Segment right) => left.Equals(right);
 
 	public override int GetHashCode() => ((int) Point1.X ^ (int) Point2.X ^ (int) Point1.Y ^ (int) Point2.Y).GetHashCode();
-	public override string ToString() => $"{nameof(Segment)} [{Point1} {Point2}]";
+	public override string ToString() => $"[{Point1}, {Point2}]";
 }

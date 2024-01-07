@@ -2,6 +2,8 @@
 
 public class Wait {
     public bool Continue { get; set; }
+    public bool Pause { get; set; }
+    public int Delay { get; set; }
 
     public async Task ForContinue() {
         Continue = false;
@@ -11,8 +13,19 @@ public class Wait {
                 // 80ms after a click feels pretty snappy but doesn't bog down the machine with a loop.
                 Thread.Sleep(80);
             }
+
+            Continue = false;
         });
     }
 
-    public async Task For(int ms) => await Task.Delay(ms);
+    public async Task For(int ms) {
+        if (Pause) {
+            await ForContinue();
+        }
+        else {
+            await Task.Delay(ms);
+        }
+    }
+
+    public async Task ForDelay() => await For(Delay);
 }
