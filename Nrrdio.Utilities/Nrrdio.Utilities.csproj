@@ -1,23 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <PackageId>Nrrdio.Utilities</PackageId>
-    <Version>1.0.0</Version>
-    <Title>Nrrdio Standard Utilities</Title>
-    <Description>Source: https://github.com/jyarbro/Nrrdio.Utilities</Description>
-    <Authors>Jim Yarbro</Authors>
-    <Company>nrrd.io</Company>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
-  <ItemGroup>
-    <Using Include="Microsoft.Extensions.Logging" />
-    <Using Include="System.Collections.Concurrent" />
-    <Using Include="System.Text.Json" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <PackageId>Nrrdio.Utilities</PackageId>
+        <Version>1.0.0</Version>
+        <Title>Nrrdio Standard Utilities</Title>
+        <Description>Source: https://github.com/jyarbro/Nrrdio.Utilities</Description>
+        <Authors>Jim Yarbro</Authors>
+        <Company>nrrd.io</Company>
+        <Platforms>x86;x64</Platforms>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+    <ItemGroup>
+        <Using Include="Microsoft.Extensions.Logging" />
+        <Using Include="System.Collections.Concurrent" />
+        <Using Include="System.Text.Json" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    </ItemGroup>
 </Project>
