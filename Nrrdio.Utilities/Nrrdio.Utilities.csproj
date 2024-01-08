@@ -1,15 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <PackageId>Nrrdio.Utilities</PackageId>
+        <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+        <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+        <Platforms>x86;x64</Platforms>
+        <RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+        <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+        <PackageId>$(MSBuildProjectName.Replace(" ", "_"))</PackageId>
         <Version>1.0.0</Version>
         <Title>Nrrdio Standard Utilities</Title>
         <Description>Source: https://github.com/jyarbro/Nrrdio.Utilities</Description>
         <Authors>Jim Yarbro</Authors>
         <Company>nrrd.io</Company>
-        <Platforms>x86;x64</Platforms>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
         <Using Include="Microsoft.Extensions.Logging" />
