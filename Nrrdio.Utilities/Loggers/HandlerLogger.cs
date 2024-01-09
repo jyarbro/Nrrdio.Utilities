@@ -1,5 +1,4 @@
 ﻿using Nrrdio.Utilities.Loggers.Contracts;
-using Windows.ApplicationModel.Store;
 
 namespace Nrrdio.Utilities.Loggers;
 
