@@ -5,7 +5,7 @@ public class LogEntry {
 	public int EventId { get; set; }
 	public LogLevel LogLevel { get; set; } = LogLevel.Information;
 	public DateTime Time { get; set; }
-	public string Name { get; set; }
-	public string Message { get; set; }
-	public string SerializedException { get; set; }
+	public string Name { get; set; } = "";
+	public string Message { get; set; } = "";
+	public string SerializedException { get; set; } = "";
 }

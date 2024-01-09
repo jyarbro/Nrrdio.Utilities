@@ -16,10 +16,10 @@ public class GzipWebClient : WebClient {
 		Options = options.Value;
 	}
 
-	public async Task<HtmlDocument> DownloadDocument(string remoteUrl) {
+	public async Task<HtmlDocument?> DownloadDocument(string remoteUrl) {
 		var data = await DownloadStringSafe(remoteUrl);
 
-		HtmlDocument returnObject = null;
+		HtmlDocument? returnObject = null;
 
 		if (!string.IsNullOrEmpty(data)) {
 			returnObject = new HtmlDocument();
@@ -29,7 +29,7 @@ public class GzipWebClient : WebClient {
 		return returnObject;
 	}
 
-	public async Task<T> DownloadJSObject<T>(string remoteUrl, JsonSerializerOptions options = null) {
+	public async Task<T?> DownloadJSObject<T>(string remoteUrl, JsonSerializerOptions? options = null) {
 		var data = await DownloadStringSafe(remoteUrl);
 
 		var returnObject = default(T);
@@ -69,7 +69,7 @@ public class GzipWebClient : WebClient {
 
 	public async Task<string> UploadJSObject(string url, string method, object data) {
 		if (method is not { Length: > 0 }) {
-			throw new ArgumentException();
+			throw new ArgumentException($"{nameof(method)} must contain a value");
 		}
 
 		var remoteUrl = CleanUrl(url);
@@ -87,9 +87,9 @@ public class GzipWebClient : WebClient {
 	protected override WebRequest GetWebRequest(Uri remoteUri) {
 		ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault | SecurityProtocolType.Tls13;
 
-		var request = base.GetWebRequest(remoteUri) as HttpWebRequest;
+		var request = (HttpWebRequest)base.GetWebRequest(remoteUri);
 
-		request.UserAgent = Options.UserAgent;
+        request.UserAgent = Options.UserAgent;
 		request.AllowAutoRedirect = true;
 		request.MaximumAutomaticRedirections = 3;
 		request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;

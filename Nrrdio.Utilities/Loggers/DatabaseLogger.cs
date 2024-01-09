@@ -3,7 +3,7 @@
 namespace Nrrdio.Utilities.Loggers;
 
 public class DatabaseLogger : ILogger {
-	public string Name { private get; init; }
+	public string Name { private get; init; } = "";
 
 	public LogLevel LogLevel { get; init; } = LogLevel.Information;
 
@@ -15,7 +15,7 @@ public class DatabaseLogger : ILogger {
 		Repository = repository;
 	}
 
-	public IDisposable BeginScope<TState>(TState state) => default;
+	public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
 
 	public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel;
 
@@ -23,8 +23,8 @@ public class DatabaseLogger : ILogger {
 		LogLevel logLevel,
 		EventId eventId,
 		TState state,
-		Exception exception,
-		Func<TState, Exception, string> formatter) {
+		Exception? exception,
+		Func<TState, Exception?, string> formatter) {
 
 		if (logLevel >= LogLevel) {
 			Repository.Add(new LogEntry {

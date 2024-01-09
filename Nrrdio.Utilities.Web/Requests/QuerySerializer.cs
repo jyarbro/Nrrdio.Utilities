@@ -1,21 +1,25 @@
 ﻿namespace Nrrdio.Utilities.Web.Requests;
 
 public class QuerySerializer {
-	/// <summary>
-	/// Converts a simple object into a query string.
-	/// </summary>
-	/// <param name="namingPolicy">Used especially to format the names of properties.</param>
-	public static string Serialize(object obj, JsonNamingPolicy namingPolicy = null) {
-		JsonSerializerOptions options = null;
+	static JsonSerializerOptions Options { get; set; } = new JsonSerializerOptions();
 
-		if (namingPolicy is not null) {
-			options = new JsonSerializerOptions { PropertyNamingPolicy = namingPolicy };
-		}
+    /// <summary>
+    /// Converts a simple object into a query string.
+    /// </summary>
+    /// <param name="namingPolicy">Used especially to format the names of properties.</param>
+    public static string Serialize(object obj, JsonNamingPolicy? namingPolicy = null) {
+        Options.PropertyNamingPolicy = namingPolicy;
 
-		var serialized = JsonSerializer.Serialize(obj, options);
+		var serialized = JsonSerializer.Serialize(obj, Options);
 		var deserialized = JsonSerializer.Deserialize<IDictionary<string, object>>(serialized);
-		var query = deserialized.Select(o => $"{HttpUtility.UrlEncode(o.Key)}={HttpUtility.UrlEncode(o.Value.ToString())}");
+		var query = deserialized?.Select(o => $"{HttpUtility.UrlEncode(o.Key)}={HttpUtility.UrlEncode(o.Value.ToString())}");
 
-		return string.Join("&", query);
+        var value = "";
+
+        if (query is not null) {
+            value = string.Join("&", query);
+        }
+
+        return value;
 	}
 }

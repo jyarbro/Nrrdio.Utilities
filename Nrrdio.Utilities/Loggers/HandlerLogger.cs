@@ -6,16 +6,22 @@ namespace Nrrdio.Utilities.Loggers;
 /// Returns log event to a registered handler. Useful when the handler is GUI based.
 /// </summary>
 public class HandlerLogger : IHandlerLogger {
-	public event EventHandler<LogEntryEventArgs> EntryAddedEvent;
+	public event EventHandler<LogEntryEventArgs>? EntryAddedEvent;
 
-	public string Name { private get; init; }
+	public string Name { private get; init; } = "";
 	public LogLevel LogLevel { get; init; } = LogLevel.Information;
 
-	public IDisposable BeginScope<TState>(TState state) => default;
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
 
-	public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel;
+    public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel;
 
-	public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter) {
+	public void Log<TState>(
+		LogLevel logLevel,
+		EventId eventId,
+		TState state,
+		Exception? exception,
+		Func<TState, Exception?, string> formatter
+	) {
 		var args = new LogEntryEventArgs {
 			LogEntry = new LogEntry {
 				EventId = eventId.Id,

@@ -4,20 +4,20 @@
 /// Source: https://docs.microsoft.com/en-us/dotnet/core/extensions/custom-logging-provider
 /// </summary>
 public class ColorConsoleLogger : ILogger {
-	public string Name { private get; init; }
+	public string Name { private get; init; } = "";
 
 	public int EventId { get; set; }
 	public LogLevel LogLevel { get; set; } = LogLevel.Information;
 
-	public IDisposable BeginScope<TState>(TState state) => default;
+	public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
 	public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel;
 
 	public void Log<TState>(
 		LogLevel logLevel,
 		EventId eventId,
 		TState state,
-		Exception exception,
-		Func<TState, Exception, string> formatter) {
+		Exception? exception,
+		Func<TState, Exception?, string> formatter) {
 
 		if (!IsEnabled(logLevel)) {
 			return;

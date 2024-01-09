@@ -3,21 +3,19 @@
 namespace Nrrdio.Utilities.Web.Requests;
 
 public class FormDataUrlEncodedSerializer {
-	/// <summary>
-	/// Converts a simple object into form data.
-	/// </summary>
-	/// <param name="namingPolicy">Used especially to format the names of properties.</param>
-	public static NameValueCollection Serialize(object obj, JsonNamingPolicy namingPolicy = null) {
-		JsonSerializerOptions options = null;
+	static JsonSerializerOptions Options { get; set; } = new JsonSerializerOptions();
 
-		if (namingPolicy is not null) {
-			options = new JsonSerializerOptions { PropertyNamingPolicy = namingPolicy };
-		}
+    /// <summary>
+    /// Converts a simple object into form data.
+    /// </summary>
+    /// <param name="namingPolicy">Used especially to format the names of properties.</param>
+    public static NameValueCollection? Serialize(object obj, JsonNamingPolicy namingPolicy) {
+		Options.PropertyNamingPolicy = namingPolicy;
 
-		var serialized = JsonSerializer.Serialize(obj, options);
+		var serialized = JsonSerializer.Serialize(obj, Options);
 		var deserialized = JsonSerializer.Deserialize<IDictionary<string, object>>(serialized);
 
-		return deserialized.Aggregate(new NameValueCollection(),
+		return deserialized?.Aggregate(new NameValueCollection(),
 			(collection, kvp) => {
 				collection.Add(HttpUtility.UrlEncode(kvp.Key), HttpUtility.UrlEncode(kvp.Value.ToString()));
 				return collection;

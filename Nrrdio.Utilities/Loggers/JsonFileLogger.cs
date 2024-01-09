@@ -6,13 +6,13 @@ namespace Nrrdio.Utilities.Loggers;
 /// Logs to a json file.
 /// </summary>
 public class JsonFileLogger : IAsyncLogger, IDisposable {
-	public string Name { private get; init; }
+	public string Name { private get; init; } = "";
 
 	public IAsyncLoggerConfig GenericConfig {
 		get => Config;
-		init => Config = value as Configuration;
+		init => Config = (Configuration)value;
 	}
-	Configuration Config { get; init; }
+	Configuration Config { get; init; } = new();
 
 	public CancellationToken CancellationToken { private get; init; }
 
@@ -27,7 +27,7 @@ public class JsonFileLogger : IAsyncLogger, IDisposable {
 			return _FilePath;
 		}
 	}
-	string _FilePath;
+	string _FilePath = "";
 
 	bool disposed;
 	int counter;
@@ -36,7 +36,7 @@ public class JsonFileLogger : IAsyncLogger, IDisposable {
 		MonitorQueue();
 	}
 
-	public IDisposable BeginScope<TState>(TState state) => default;
+	public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
 
 	public bool IsEnabled(LogLevel logLevel) => logLevel == Config.LogLevel;
 
@@ -44,8 +44,8 @@ public class JsonFileLogger : IAsyncLogger, IDisposable {
 		LogLevel logLevel,
 		EventId eventId,
 		TState state,
-		Exception exception,
-		Func<TState, Exception, string> formatter) {
+		Exception? exception,
+		Func<TState, Exception?, string> formatter) {
 
 		if (logLevel >= Config.LogLevel) {
 			WriteableQueue.Enqueue(new LogEntry {
@@ -131,7 +131,7 @@ public class JsonFileLogger : IAsyncLogger, IDisposable {
 
 	public record Configuration : IAsyncLoggerConfig {
 		public LogLevel LogLevel { get; init; } = LogLevel.Information;
-		public string FolderPath { get; init; }
+		public string FolderPath { get; init; } = "";
 		public int RetainFileCount { get; init; } = 5;
 		public int MaxFileSize { get; init; } = 100;
 	}
@@ -140,7 +140,7 @@ public class JsonFileLogger : IAsyncLogger, IDisposable {
 public sealed class JsonFileLoggerProvider : ILoggerProvider {
 	static ConcurrentDictionary<string, JsonFileLogger> Instances => new();
 
-	public JsonFileLogger.Configuration Config { private get; init; }
+	public JsonFileLogger.Configuration Config { private get; init; } = new();
 	public CancellationTokenSource CancellationTokenSource { private get; init; } = new();
 
 	public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new JsonFileLogger {

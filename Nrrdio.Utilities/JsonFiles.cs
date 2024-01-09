@@ -39,7 +39,7 @@ public static class JsonFiles {
         /// <typeparam name="T">The type of object to read from the file.</typeparam>
         /// <param name="filePath">The file path to read the object instance from.</param>
         /// <returns>Returns a new instance of the object read from the Json file.</returns>
-        public static async Task<T> ReadAsync<T>(string filePath) where T : new() {
+        public static async Task<T?> ReadAsync<T>(string filePath) where T : new() {
             using var reader = new StreamReader(filePath);
             var fileContents = await reader.ReadToEndAsync();
             reader.Close();
@@ -54,7 +54,7 @@ public static class JsonFiles {
         /// <typeparam name="T">The type of object to read from the file.</typeparam>
         /// <param name="filePath">The file path to read the object instance from.</param>
         /// <returns>Returns a new instance of the object read from the Json file.</returns>
-        public static T Read<T>(string filePath) where T : new() {
+        public static T? Read<T>(string filePath) where T : new() {
             using var reader = new StreamReader(filePath);
             var fileContents = reader.ReadToEnd();
             reader.Close();
@@ -69,13 +69,13 @@ public static class JsonFiles {
         /// <typeparam name="T">The type of object to read from the file.</typeparam>
         /// <param name="filePath">The file path to read the object instance from.</param>
         /// <returns>Returns a new instance of the object read from the Json file.</returns>
-        public static IEnumerable<T> ReadMany<T>(string filePath) where T : new() {
+        public static IEnumerable<T?> ReadMany<T>(string filePath) where T : new() {
             using var reader = new StreamReader(filePath);
 
-            string line;
+            string? line;
 
             while ((line = reader.ReadLine()) is not null) {
-                yield return JsonSerializer.Deserialize<T>(line);
+                yield return JsonSerializer.Deserialize<T?>(line);
             }
 
             reader.Close();
