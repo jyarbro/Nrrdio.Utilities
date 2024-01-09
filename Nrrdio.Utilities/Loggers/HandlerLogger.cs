@@ -1,4 +1,5 @@
 ﻿using Nrrdio.Utilities.Loggers.Contracts;
+using Windows.ApplicationModel.Store;
 
 namespace Nrrdio.Utilities.Loggers;
 
@@ -8,12 +9,12 @@ namespace Nrrdio.Utilities.Loggers;
 public class HandlerLogger : IHandlerLogger {
 	public event EventHandler<LogEntryEventArgs>? EntryAddedEvent;
 
-	public string Name { private get; init; } = "";
-	public LogLevel LogLevel { get; init; } = LogLevel.Information;
+	public string Name { get; init; } = "";
+	public LogLevel LogLevel { get; init; } = LogLevel.Warning;
 
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
 
-    public bool IsEnabled(LogLevel logLevel) => logLevel == LogLevel;
+    public bool IsEnabled(LogLevel logLevel) => logLevel >= LogLevel;
 
 	public void Log<TState>(
 		LogLevel logLevel,
@@ -22,34 +23,44 @@ public class HandlerLogger : IHandlerLogger {
 		Exception? exception,
 		Func<TState, Exception?, string> formatter
 	) {
-		var args = new LogEntryEventArgs {
-			LogEntry = new LogEntry {
-				EventId = eventId.Id,
-				LogLevel = logLevel,
-				Name = Name,
-				Message = formatter(state, exception),
-				Time = DateTime.Now,
-				SerializedException = exception is not null ? JsonSerializer.Serialize(exception) : string.Empty
-			}
-		};
-
-		EntryAddedEvent?.Invoke(this, args);
+		if (IsEnabled(logLevel)) {
+			EntryAddedEvent?.Invoke(this, new LogEntryEventArgs {
+				LogEntry = new LogEntry {
+					EventId = eventId.Id,
+					LogLevel = logLevel,
+					Name = Name,
+					Message = formatter(state, exception),
+					Time = DateTime.Now,
+					SerializedException = exception is not null ? JsonSerializer.Serialize(exception) : string.Empty
+				}
+			});
+		}
 	}
 }
 
 public sealed class HandlerLoggerProvider : ILoggerProvider {
-	public static ConcurrentDictionary<string, HandlerLogger> Instances { get; }
+	public static HandlerLoggerProvider? Current { get; set; }
+
+	ConcurrentDictionary<string, HandlerLogger> _Instances = new(StringComparer.OrdinalIgnoreCase);
 
 	public LogLevel LogLevel { get; init; }
 
-	static HandlerLoggerProvider() {
-		Instances = new ConcurrentDictionary<string, HandlerLogger>();
+	public HandlerLoggerProvider() {
+		if (Current is not null) {
+			throw new InvalidOperationException($"There is already an instance of {nameof(HandlerLoggerProvider)}");
+		}
+
+		Current = this;
 	}
 
-	public ILogger CreateLogger(string categoryName) => Instances.GetOrAdd(categoryName, name => new HandlerLogger {
-		Name = name,
-		LogLevel = LogLevel
-	});
+	public ILogger CreateLogger(string categoryName) => 
+		_Instances.GetOrAdd(categoryName, name => 
+			new HandlerLogger {
+				Name = name,
+				LogLevel = LogLevel
+			});
 
-	public void Dispose() => Instances.Clear();
+	public IHandlerLogger GetLogger(string instanceName) => _Instances[instanceName];
+
+	public void Dispose() => _Instances.Clear();
 }

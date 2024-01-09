@@ -3,6 +3,6 @@
 public interface IHandlerLogger : ILogger {
 	event EventHandler<LogEntryEventArgs> EntryAddedEvent;
 
-	string Name { init; }
+	string Name { get; init; }
 	LogLevel LogLevel { get; init; }
 }
