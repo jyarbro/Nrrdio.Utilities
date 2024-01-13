@@ -26,12 +26,10 @@ public class FrameRateHandler : IFrameRateHandler {
     void UpdateFrameRate() {
         TotalSeconds = (DateTime.Now - FrameRunTimer).TotalSeconds;
 
-        if (FrameRateUpdated is not null) {
-            FrameRateUpdated(this, new FrameRateEventArgs {
-                FramesPerSecond = Math.Round(FrameCount / TotalSeconds),
-                FrameLag = Math.Round(FrameDuration / FrameCount, 2)
-            });
-        }
+        FrameRateUpdated?.Invoke(this, new FrameRateEventArgs {
+            FramesPerSecond = Math.Round(FrameCount / TotalSeconds),
+            FrameLag = Math.Round(FrameDuration / FrameCount, 2)
+        });
 
         if (TotalSeconds > 5) {
             FrameCount = 0;
