@@ -61,5 +61,17 @@ public sealed class HandlerLoggerProvider : ILoggerProvider {
 
 	public IHandlerLogger GetLogger(string instanceName) => _Instances[instanceName];
 
+	public void RegisterEventHandler(EventHandler<LogEntryEventArgs> handler) {
+		foreach (var instance in _Instances) {
+			instance.Value.EntryAddedEvent += handler;
+		}
+	}
+
+	public void DeregisterEventHandler(EventHandler<LogEntryEventArgs> handler) {
+		foreach (var instance in _Instances) {
+			instance.Value.EntryAddedEvent -= handler;
+		}
+	}
+
 	public void Dispose() => _Instances.Clear();
 }
