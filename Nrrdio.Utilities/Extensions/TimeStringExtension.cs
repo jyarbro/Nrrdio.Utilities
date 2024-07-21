@@ -1,4 +1,4 @@
-﻿namespace Nrrdio.Utilities.Text;
+﻿namespace Nrrdio.Utilities.Extensions;
 
 public static class TimeStringExtension {
 	// example from https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time
