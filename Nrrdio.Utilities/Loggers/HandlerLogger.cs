@@ -40,7 +40,8 @@ public class HandlerLogger : IHandlerLogger {
 public sealed class HandlerLoggerProvider : ILoggerProvider {
 	public static HandlerLoggerProvider? Current { get; set; }
 
-	ConcurrentDictionary<string, HandlerLogger> _Instances = new(StringComparer.OrdinalIgnoreCase);
+	public static ConcurrentDictionary<string, HandlerLogger>? Instances => Current?._Instances;
+    readonly ConcurrentDictionary<string, HandlerLogger> _Instances = new(StringComparer.OrdinalIgnoreCase);
 
 	public LogLevel LogLevel { get; init; }
 
