@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using Nrrdio.Utilities.Text;
+using Nrrdio.Utilities.Extensions;
 
 namespace Nrrdio.Utilities.Web.TagHelpers;
 public class PassedTimeTagHelper : TagHelper {

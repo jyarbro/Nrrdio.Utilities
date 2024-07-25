@@ -1,4 +1,4 @@
-﻿using Nrrdio.Utilities.Text;
+﻿using Nrrdio.Utilities.Extensions;
 
 namespace Nrrdio.Utilities.Web.Requests;
 
